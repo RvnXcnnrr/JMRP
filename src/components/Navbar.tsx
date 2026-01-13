@@ -115,11 +115,11 @@ export function Navbar({ links, resumeHref, onToggleTheme, themeLabel }: NavbarP
       <div className="border-b border-slate-200/70 bg-white/70 backdrop-blur dark:border-white/10 dark:bg-slate-950/40">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
           <a href="#home" className="group inline-flex items-center gap-2">
-            <img 
-              src="/assets/profile.png" 
-              alt="JMR Logo" 
-              className="h-9 w-9 rounded-xl ring-1 ring-slate-200 dark:ring-white/10 object-cover"
-            />
+            <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-sky-500/20 to-indigo-500/20 ring-1 ring-slate-200 dark:ring-white/10">
+              <span className="text-[11px] font-semibold tracking-wide text-slate-800 dark:text-slate-100">
+                JMRP
+              </span>
+            </span>
             <span className="text-sm font-semibold tracking-tight text-slate-900 dark:text-slate-50">
               Portfolio
             </span>
