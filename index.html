@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="BSIT 4th Year IT student portfolio specializing in Information Technology, IoT, and Full-Stack Development." />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0b1220" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Javy Malisud Rodillon | Portfolio" />
+    <meta property="og:description" content="Modern, responsive portfolio showcasing projects, skills, and experience in IT, IoT, and full-stack development." />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Javy Malisud Rodillon",
+        "jobTitle": "BSIT 4th Year Student",
+        "url": "https://example.com",
+        "knowsAbout": ["Information Technology", "IoT", "Full-Stack Development"],
+        "sameAs": [
+          "https://github.com/RvnXcnnrr",
+          "https://www.linkedin.com/in/javy-malisud-rodillon-573263378/",
+          "https://www.facebook.com/Gensho.Rora/"
+        ]
+      }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('theme')
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+          var theme = saved === 'light' || saved === 'dark' ? saved : prefersDark ? 'dark' : 'light'
+          document.documentElement.classList.toggle('dark', theme === 'dark')
+        } catch (e) {
+          // no-op
+        }
+      })()
+    </script>
+
+    <title>Javy Malisud Rodillon | Portfolio</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
