@@ -120,9 +120,6 @@ export function Navbar({ links, resumeHref, onToggleTheme, themeLabel }: NavbarP
                 JMRP
               </span>
             </span>
-            <span className="text-sm font-semibold tracking-tight text-slate-900 dark:text-slate-50">
-              Portfolio
-            </span>
           </a>
 
           <nav className="hidden items-center gap-6 md:flex" aria-label="Primary">
