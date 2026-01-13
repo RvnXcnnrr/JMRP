@@ -112,7 +112,7 @@ export function Navbar({ links, resumeHref, onToggleTheme, themeLabel }: NavbarP
         Skip to content
       </a>
 
-      <div className="border-b border-slate-200/70 bg-white/70 backdrop-blur dark:border-white/10 dark:bg-slate-950/40">
+      <div className="border-b border-slate-200/80 bg-white/85 backdrop-blur dark:border-white/10 dark:bg-slate-950/40">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
           <a href="#home" className="group inline-flex items-center gap-2">
             <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-sky-500/20 to-indigo-500/20 ring-1 ring-slate-200 dark:ring-white/10">
@@ -140,7 +140,7 @@ export function Navbar({ links, resumeHref, onToggleTheme, themeLabel }: NavbarP
               href={resumeHref}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center rounded-xl border border-slate-200 bg-white/60 px-3 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100"
+              className="inline-flex items-center rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100"
             >
               Resume
             </a>
@@ -150,7 +150,7 @@ export function Navbar({ links, resumeHref, onToggleTheme, themeLabel }: NavbarP
             <button
               type="button"
               onClick={onToggleTheme}
-              className="inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white/60 px-3 text-sm font-medium text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100"
+              className="inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white/80 px-3 text-sm font-medium text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100"
               aria-label={themeLabel}
               title={themeLabel}
             >
@@ -174,7 +174,7 @@ export function Navbar({ links, resumeHref, onToggleTheme, themeLabel }: NavbarP
               type="button"
               onClick={() => setOpen((v) => !v)}
               ref={menuButtonRef}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white/60 text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 md:hidden"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white/80 text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 md:hidden"
               aria-label={open ? 'Close menu' : 'Open menu'}
               aria-expanded={open}
               aria-controls="mobile-menu"
@@ -194,7 +194,7 @@ export function Navbar({ links, resumeHref, onToggleTheme, themeLabel }: NavbarP
         {open ? (
           <div className="md:hidden" id="mobile-menu" ref={mobilePanelRef}>
             <div className="mx-auto max-w-6xl px-4 pb-4 sm:px-6">
-              <div className="rounded-2xl border border-slate-200 bg-white/70 p-3 shadow-sm backdrop-blur dark:border-white/10 dark:bg-slate-950/40">
+              <div className="rounded-2xl border border-slate-200 bg-white/85 p-3 shadow-sm backdrop-blur dark:border-white/10 dark:bg-slate-950/40">
                 <nav className="flex flex-col" aria-label="Mobile">
                   <a
                     href={resumeHref}

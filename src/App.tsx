@@ -52,7 +52,7 @@ function App() {
           <div data-reveal className="grid items-center gap-10 lg:grid-cols-12">
             <div className="lg:col-span-7">
               <p
-                className="hero-intro inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/60 px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/5 dark:text-slate-200"
+                className="hero-intro inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-4 py-2 text-xs font-semibold text-slate-800 shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/5 dark:text-slate-200"
                 style={{ transitionDelay: '40ms' }}
                 data-reveal
               >
@@ -102,13 +102,13 @@ function App() {
                 <a
                   href={profile.resumeSrc}
                   download
-                  className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white/60 px-5 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 active:scale-[0.99] motion-safe:hover:scale-[1.02] dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
+                  className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white/80 px-5 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 active:scale-[0.99] motion-safe:hover:scale-[1.02] dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
                 >
                   Download Resume
                 </a>
                 <a
                   href="#contact"
-                  className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white/60 px-5 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 active:scale-[0.99] motion-safe:hover:scale-[1.02] dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
+                  className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white/80 px-5 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 active:scale-[0.99] motion-safe:hover:scale-[1.02] dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
                 >
                   Contact Me
                 </a>
@@ -173,7 +173,7 @@ function App() {
                         <div className="mt-4 grid gap-3">
                           <div
                             data-reveal
-                            className="rounded-xl border border-slate-200 bg-white/70 p-4 dark:border-white/10 dark:bg-white/5"
+                            className="rounded-xl border border-slate-200 bg-white/90 p-4 dark:border-white/10 dark:bg-white/5"
                           >
                             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
                               Focus
@@ -184,7 +184,7 @@ function App() {
                           </div>
                           <div
                             data-reveal
-                            className="rounded-xl border border-slate-200 bg-white/70 p-4 dark:border-white/10 dark:bg-white/5"
+                            className="rounded-xl border border-slate-200 bg-white/90 p-4 dark:border-white/10 dark:bg-white/5"
                           >
                             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
                               What I value
@@ -195,7 +195,7 @@ function App() {
                           </div>
                           <div
                             data-reveal
-                            className="rounded-xl border border-slate-200 bg-white/70 p-4 dark:border-white/10 dark:bg-white/5"
+                            className="rounded-xl border border-slate-200 bg-white/90 p-4 dark:border-white/10 dark:bg-white/5"
                           >
                             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
                               Availability
@@ -443,7 +443,7 @@ function App() {
                         type="text"
                         autoComplete="name"
                         required
-                        className="h-11 rounded-xl border border-slate-200 bg-white/60 px-4 text-sm text-slate-900 shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-50"
+                        className="h-11 rounded-xl border border-slate-200 bg-white/85 px-4 text-sm text-slate-900 shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-50"
                         placeholder="Your name"
                       />
                     </div>
@@ -458,7 +458,7 @@ function App() {
                         type="email"
                         autoComplete="email"
                         required
-                        className="h-11 rounded-xl border border-slate-200 bg-white/60 px-4 text-sm text-slate-900 shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-50"
+                        className="h-11 rounded-xl border border-slate-200 bg-white/85 px-4 text-sm text-slate-900 shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-50"
                         placeholder="you@example.com"
                       />
                     </div>
@@ -472,7 +472,7 @@ function App() {
                         name="message"
                         required
                         rows={5}
-                        className="resize-none rounded-xl border border-slate-200 bg-white/60 px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-50"
+                        className="resize-none rounded-xl border border-slate-200 bg-white/85 px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-50"
                         placeholder="Tell me about your project, timeline, and goals…"
                       />
                     </div>
@@ -488,7 +488,7 @@ function App() {
 
                         <a
                           href={`mailto:${profile.email}`}
-                          className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white/60 px-5 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100"
+                          className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white/80 px-5 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100"
                         >
                           Email directly
                         </a>
@@ -509,7 +509,7 @@ function App() {
                       href={profile.socials.github}
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-xl border border-slate-200 bg-white/60 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10 dark:hover:border-white/20"
+                      className="rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10 dark:hover:border-white/20"
                     >
                       GitHub
                       <span className="block text-xs font-medium text-slate-500 dark:text-slate-400">{profile.socials.github}</span>
@@ -518,7 +518,7 @@ function App() {
                       href={profile.socials.linkedin}
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-xl border border-slate-200 bg-white/60 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10 dark:hover:border-white/20"
+                      className="rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10 dark:hover:border-white/20"
                     >
                       LinkedIn
                       <span className="block text-xs font-medium text-slate-500 dark:text-slate-400">
@@ -527,7 +527,7 @@ function App() {
                     </a>
                     <a
                       href={`mailto:${profile.email}`}
-                      className="rounded-xl border border-slate-200 bg-white/60 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10 dark:hover:border-white/20"
+                      className="rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10 dark:hover:border-white/20"
                     >
                       Email
                       <span className="block text-xs font-medium text-slate-500 dark:text-slate-400">{profile.email}</span>

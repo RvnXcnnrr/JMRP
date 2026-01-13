@@ -25,7 +25,7 @@ export function Avatar({ name, src, size = 120, priority = false }: AvatarProps)
 
   return (
     <div
-      className="relative grid place-items-center overflow-hidden rounded-2xl border border-slate-200 bg-white/60 shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/5"
+      className="relative grid place-items-center overflow-hidden rounded-2xl border border-slate-200 bg-white/85 shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/5"
       style={{ width: size, height: size }}
       aria-label={name}
     >

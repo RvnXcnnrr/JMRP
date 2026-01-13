@@ -4,7 +4,7 @@ type FooterProps = {
 
 export function Footer({ quickLinks }: FooterProps) {
   return (
-    <footer className="border-t border-slate-200/70 bg-white/50 py-10 backdrop-blur dark:border-white/10 dark:bg-slate-950/25">
+    <footer className="border-t border-slate-200/80 bg-white/80 py-10 backdrop-blur dark:border-white/10 dark:bg-slate-950/25">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
           <div>
