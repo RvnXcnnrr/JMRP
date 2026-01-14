@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Card } from './components/Card'
 import { Chip } from './components/Chip'
 import { Avatar } from './components/Avatar'
@@ -31,8 +31,6 @@ function App() {
     ],
     [],
   )
-
-  const [contactStatus, setContactStatus] = useState<string | null>(null)
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-50">
@@ -395,164 +393,80 @@ function App() {
             <SectionHeader
               eyebrow="Contact"
               title="Let’s build something"
-              subtitle="Send a message, share a project idea, or ask for my CV—happy to connect."
+              subtitle="Reach out via email or socials below—happy to connect."
             />
 
-            <div className="mt-10 grid gap-6 lg:grid-cols-12">
-              <div className="lg:col-span-7">
-                <Card>
-                  <form
-                    className="grid gap-4"
-                    onSubmit={(e) => {
-                      e.preventDefault()
-                      const form = e.currentTarget
-                      const data = new FormData(form)
-                      const name = String(data.get('name') ?? '').trim()
-                      const email = String(data.get('email') ?? '').trim()
-                      const message = String(data.get('message') ?? '').trim()
-
-                      const subject = encodeURIComponent(`Portfolio contact from ${name || 'visitor'}`)
-                      const body = encodeURIComponent(
-                        `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}\n`,
-                      )
-
-                      setContactStatus('Opening your email client…')
-                      window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`
-                      window.setTimeout(() => setContactStatus(null), 2500)
-                    }}
-                  >
-                    <noscript>
-                      <p className="text-sm text-slate-600 dark:text-slate-300">
-                        JavaScript is required for the prefilled message. You can email me directly at{' '}
-                        <a
-                          href={`mailto:${profile.email}`}
-                          className="font-semibold text-slate-700 underline underline-offset-4 dark:text-slate-200"
-                        >
-                          {profile.email}
-                        </a>
-                        .
-                      </p>
-                    </noscript>
-                    <div className="grid gap-1.5">
-                      <label className="text-sm font-semibold text-slate-800 dark:text-slate-100" htmlFor="name">
-                        Name
-                      </label>
-                      <input
-                        id="name"
-                        name="name"
-                        type="text"
-                        autoComplete="name"
-                        required
-                        className="h-11 rounded-xl border border-slate-200 bg-white/85 px-4 text-sm text-slate-900 shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-50"
-                        placeholder="Your name"
-                      />
-                    </div>
-
-                    <div className="grid gap-1.5">
-                      <label className="text-sm font-semibold text-slate-800 dark:text-slate-100" htmlFor="email">
-                        Email
-                      </label>
-                      <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        autoComplete="email"
-                        required
-                        className="h-11 rounded-xl border border-slate-200 bg-white/85 px-4 text-sm text-slate-900 shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-50"
-                        placeholder="you@example.com"
-                      />
-                    </div>
-
-                    <div className="grid gap-1.5">
-                      <label className="text-sm font-semibold text-slate-800 dark:text-slate-100" htmlFor="message">
-                        Message
-                      </label>
-                      <textarea
-                        id="message"
-                        name="message"
-                        required
-                        rows={5}
-                        className="resize-none rounded-xl border border-slate-200 bg-white/85 px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-50"
-                        placeholder="Tell me about your project, timeline, and goals…"
-                      />
-                    </div>
-
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div className="flex flex-wrap items-center gap-3">
-                        <button
-                          type="submit"
-                          className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
-                        >
-                          Send Message
-                        </button>
-
-                        <a
-                          href={`mailto:${profile.email}`}
-                          className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white/80 px-5 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
-                        >
-                          Email directly
-                        </a>
-                      </div>
-                      <p className="text-sm text-slate-500 dark:text-slate-400" aria-live="polite">
-                        {contactStatus}
-                      </p>
-                    </div>
-                  </form>
-                </Card>
-              </div>
-
-              <div className="lg:col-span-5">
-                <Card>
-                  <p className="text-sm font-semibold text-slate-900 dark:text-slate-50">Social</p>
-                  <div className="mt-4 grid gap-3">
-                    <a
-                      href={profile.socials.github}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10 dark:hover:border-white/20"
-                    >
-                      GitHub
-                      <span className="block text-xs font-medium text-slate-500 dark:text-slate-400">{profile.socials.github}</span>
-                    </a>
-                    <a
-                      href={profile.socials.linkedin}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10 dark:hover:border-white/20"
-                    >
-                      LinkedIn
-                      <span className="block text-xs font-medium text-slate-500 dark:text-slate-400">
-                        {profile.socials.linkedin}
-                      </span>
-                    </a>
-                    <a
-                      href={profile.socials.facebook}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10 dark:hover:border-white/20"
-                    >
-                      Facebook
-                      <span className="block text-xs font-medium text-slate-500 dark:text-slate-400">
-                        {profile.socials.facebook}
-                      </span>
-                    </a>
-                    <a
-                      href={`mailto:${profile.email}`}
-                      className="rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10 dark:hover:border-white/20"
-                    >
-                      Email
-                      <span className="block text-xs font-medium text-slate-500 dark:text-slate-400">{profile.email}</span>
-                    </a>
-                  </div>
-
-                  <div className="mt-5 rounded-xl border border-slate-200 bg-gradient-to-br from-sky-500/10 to-indigo-500/10 p-4 dark:border-white/10">
-                    <p className="text-sm font-semibold text-slate-900 dark:text-slate-50">Prefer a quick message?</p>
+            <div className="mt-10" data-reveal>
+              <Card>
+                <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+                  <div>
+                    <p className="text-sm font-semibold text-slate-900 dark:text-slate-50">Social</p>
                     <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                      Use the form to open a prefilled email, or message me on LinkedIn.
+                      Email is best for work inquiries. LinkedIn is great for quick updates.
                     </p>
                   </div>
-                </Card>
-              </div>
+                </div>
+
+                <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                  <a
+                    href={`mailto:${profile.email}`}
+                    className="group rounded-xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:hover:border-white/20"
+                  >
+                    <span className="block text-sm font-semibold text-slate-800 dark:text-slate-100">Email</span>
+                    <span
+                      className="mt-1 block min-w-0 truncate text-xs font-medium text-slate-500 dark:text-slate-400"
+                      title={profile.email}
+                    >
+                      {profile.email}
+                    </span>
+                  </a>
+
+                  <a
+                    href={profile.socials.linkedin}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group rounded-xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:hover:border-white/20"
+                  >
+                    <span className="block text-sm font-semibold text-slate-800 dark:text-slate-100">LinkedIn</span>
+                    <span
+                      className="mt-1 block min-w-0 truncate text-xs font-medium text-slate-500 dark:text-slate-400"
+                      title={profile.socials.linkedin}
+                    >
+                      {profile.socials.linkedin}
+                    </span>
+                  </a>
+
+                  <a
+                    href={profile.socials.github}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group rounded-xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:hover:border-white/20"
+                  >
+                    <span className="block text-sm font-semibold text-slate-800 dark:text-slate-100">GitHub</span>
+                    <span
+                      className="mt-1 block min-w-0 truncate text-xs font-medium text-slate-500 dark:text-slate-400"
+                      title={profile.socials.github}
+                    >
+                      {profile.socials.github}
+                    </span>
+                  </a>
+
+                  <a
+                    href={profile.socials.facebook}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group rounded-xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:hover:border-white/20"
+                  >
+                    <span className="block text-sm font-semibold text-slate-800 dark:text-slate-100">Facebook</span>
+                    <span
+                      className="mt-1 block min-w-0 truncate text-xs font-medium text-slate-500 dark:text-slate-400"
+                      title={profile.socials.facebook}
+                    >
+                      {profile.socials.facebook}
+                    </span>
+                  </a>
+                </div>
+              </Card>
             </div>
           </div>
         </section>
