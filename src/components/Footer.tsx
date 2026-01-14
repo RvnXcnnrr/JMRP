@@ -7,7 +7,7 @@ export function Footer({ quickLinks, socialLinks }: FooterProps) {
   return (
     <footer className="border-t border-slate-200/80 bg-white/80 py-10 backdrop-blur dark:border-white/10 dark:bg-slate-950/25">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
+        <div className="grid gap-6 sm:grid-cols-2 sm:items-center">
           <div>
             <p className="text-sm font-semibold text-slate-900 dark:text-slate-50">Portfolio</p>
             <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
@@ -15,8 +15,11 @@ export function Footer({ quickLinks, socialLinks }: FooterProps) {
             </p>
           </div>
 
-          <div className="flex flex-col items-start gap-3 sm:items-end">
-            <nav className="flex flex-wrap gap-x-5 gap-y-2" aria-label="Footer">
+          <div className="grid gap-4 sm:justify-items-end">
+            <nav
+              className="grid grid-cols-2 gap-x-6 gap-y-2 sm:flex sm:flex-wrap sm:justify-end sm:gap-x-5"
+              aria-label="Footer"
+            >
               {quickLinks.map((l) => (
                 <a
                   key={l.href}
@@ -29,7 +32,10 @@ export function Footer({ quickLinks, socialLinks }: FooterProps) {
             </nav>
 
             {socialLinks && socialLinks.length > 0 ? (
-              <nav className="flex flex-wrap gap-x-5 gap-y-2" aria-label="Social">
+              <nav
+                className="grid grid-cols-2 gap-x-6 gap-y-2 sm:flex sm:flex-wrap sm:justify-end sm:gap-x-5"
+                aria-label="Social"
+              >
                 {socialLinks.map((l) => (
                   <a
                     key={l.href}

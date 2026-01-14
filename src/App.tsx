@@ -33,8 +33,8 @@ function App() {
   )
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-50">
-      <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10">
+    <div className="min-h-screen overflow-x-hidden bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-50">
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute -top-32 left-1/2 h-[520px] w-[920px] -translate-x-1/2 rounded-full bg-gradient-to-br from-sky-500/15 via-indigo-500/10 to-slate-900/0 blur-3xl dark:from-sky-500/20 dark:via-indigo-500/10" />
         <div className="absolute bottom-0 right-0 h-[420px] w-[520px] rounded-full bg-gradient-to-tr from-indigo-500/10 to-slate-900/0 blur-3xl dark:from-indigo-500/14" />
       </div>
@@ -410,7 +410,7 @@ function App() {
                 <div className="mt-5 grid gap-3 sm:grid-cols-2">
                   <a
                     href={`mailto:${profile.email}`}
-                    className="group rounded-xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:hover:border-white/20"
+                    className="group min-w-0 rounded-xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:hover:border-white/20"
                   >
                     <span className="block text-sm font-semibold text-slate-800 dark:text-slate-100">Email</span>
                     <span
@@ -425,7 +425,7 @@ function App() {
                     href={profile.socials.linkedin}
                     target="_blank"
                     rel="noreferrer"
-                    className="group rounded-xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:hover:border-white/20"
+                    className="group min-w-0 rounded-xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:hover:border-white/20"
                   >
                     <span className="block text-sm font-semibold text-slate-800 dark:text-slate-100">LinkedIn</span>
                     <span
@@ -440,7 +440,7 @@ function App() {
                     href={profile.socials.github}
                     target="_blank"
                     rel="noreferrer"
-                    className="group rounded-xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:hover:border-white/20"
+                    className="group min-w-0 rounded-xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:hover:border-white/20"
                   >
                     <span className="block text-sm font-semibold text-slate-800 dark:text-slate-100">GitHub</span>
                     <span
@@ -455,7 +455,7 @@ function App() {
                     href={profile.socials.facebook}
                     target="_blank"
                     rel="noreferrer"
-                    className="group rounded-xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:hover:border-white/20"
+                    className="group min-w-0 rounded-xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:hover:border-white/20"
                   >
                     <span className="block text-sm font-semibold text-slate-800 dark:text-slate-100">Facebook</span>
                     <span
@@ -473,7 +473,7 @@ function App() {
       </main>
 
       <Footer
-        quickLinks={[{ href: '#home', label: 'Home' }, ...links]}
+        quickLinks={links}
         socialLinks={[
           { href: profile.socials.github, label: 'GitHub' },
           { href: profile.socials.linkedin, label: 'LinkedIn' },
