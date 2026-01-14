@@ -7,6 +7,7 @@ import { Footer } from './components/Footer'
 import { Navbar } from './components/Navbar'
 import { ProjectCard } from './components/ProjectCard'
 import { SectionHeader } from './components/SectionHeader'
+import { ToolIcon } from './components/ToolIcon'
 import { profile } from './data/profile'
 import { certifications, experience, projects, skillGroups } from './data/portfolio'
 import { useScrollReveal } from './hooks/useScrollReveal'
@@ -309,7 +310,7 @@ function App() {
                     <p className="text-sm font-semibold text-slate-900 dark:text-slate-50">{g.title}</p>
                     <div className="mt-4 flex flex-wrap gap-2">
                       {g.items.map((it) => (
-                        <Chip key={it} className={chipClassName}>
+                        <Chip key={it} className={chipClassName} startIcon={<ToolIcon label={it} />}>
                           {it}
                         </Chip>
                       ))}
