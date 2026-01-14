@@ -42,7 +42,6 @@ function App() {
 
       <Navbar
         links={links}
-        resumeHref={profile.resumeSrc}
         onToggleTheme={toggleTheme}
         themeLabel={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
       />
@@ -104,7 +103,7 @@ function App() {
                   download
                   className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white/80 px-5 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 active:scale-[0.99] motion-safe:hover:scale-[1.02] dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
                 >
-                  Download Resume
+                  Download CV
                 </a>
                 <a
                   href="#contact"
@@ -395,7 +394,7 @@ function App() {
             <SectionHeader
               eyebrow="Contact"
               title="Let’s build something"
-              subtitle="Send a message, share a project idea, or ask for my resume—happy to connect."
+              subtitle="Send a message, share a project idea, or ask for my CV—happy to connect."
             />
 
             <div className="mt-10 grid gap-6 lg:grid-cols-12">

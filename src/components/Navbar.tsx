@@ -4,12 +4,11 @@ type NavLink = { href: string; label: string }
 
 type NavbarProps = {
   links: NavLink[]
-  resumeHref: string
   onToggleTheme: () => void
   themeLabel: string
 }
 
-export function Navbar({ links, resumeHref, onToggleTheme, themeLabel }: NavbarProps) {
+export function Navbar({ links, onToggleTheme, themeLabel }: NavbarProps) {
   const [open, setOpen] = useState(false)
 
   const menuButtonRef = useRef<HTMLButtonElement | null>(null)
@@ -135,15 +134,6 @@ export function Navbar({ links, resumeHref, onToggleTheme, themeLabel }: NavbarP
                 {l.label}
               </a>
             ))}
-
-            <a
-              href={resumeHref}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
-            >
-              Resume
-            </a>
           </nav>
 
           <div className="flex items-center gap-2">
@@ -196,20 +186,11 @@ export function Navbar({ links, resumeHref, onToggleTheme, themeLabel }: NavbarP
             <div className="mx-auto max-w-6xl px-4 pb-4 sm:px-6">
               <div className="rounded-2xl border border-slate-200 bg-white/85 p-3 shadow-sm backdrop-blur dark:border-white/10 dark:bg-slate-950/40">
                 <nav className="flex flex-col" aria-label="Mobile">
-                  <a
-                    href={resumeHref}
-                    target="_blank"
-                    rel="noreferrer"
-                    ref={firstMobileLinkRef}
-                    onClick={() => setOpen(false)}
-                    className="rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:text-slate-100 dark:hover:bg-white/5"
-                  >
-                    Resume
-                  </a>
-                  {linkItems.map((l) => (
+                  {linkItems.map((l, idx) => (
                     <a
                       key={l.href}
                       href={l.href}
+                      ref={idx === 0 ? firstMobileLinkRef : undefined}
                       onClick={(e) => {
                         if (scrollToHash(l.href)) e.preventDefault()
                         setOpen(false)
