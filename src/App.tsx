@@ -526,6 +526,17 @@ function App() {
                       </span>
                     </a>
                     <a
+                      href={profile.socials.facebook}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10 dark:hover:border-white/20"
+                    >
+                      Facebook
+                      <span className="block text-xs font-medium text-slate-500 dark:text-slate-400">
+                        {profile.socials.facebook}
+                      </span>
+                    </a>
+                    <a
                       href={`mailto:${profile.email}`}
                       className="rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white hover:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10 dark:hover:border-white/20"
                     >
@@ -547,7 +558,15 @@ function App() {
         </section>
       </main>
 
-      <Footer quickLinks={[{ href: '#home', label: 'Home' }, ...links]} />
+      <Footer
+        quickLinks={[{ href: '#home', label: 'Home' }, ...links]}
+        socialLinks={[
+          { href: profile.socials.github, label: 'GitHub' },
+          { href: profile.socials.linkedin, label: 'LinkedIn' },
+          { href: profile.socials.facebook, label: 'Facebook' },
+          { href: `mailto:${profile.email}`, label: 'Email' },
+        ]}
+      />
     </div>
   )
 }
