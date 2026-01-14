@@ -23,4 +23,6 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
     # CSP is intentionally moderate because the site uses inline style attributes.
-    Content-Security-Policy = "default-src 'self'; base-uri 'self'; frame-ancestors 'none'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; object-src 'none'; form-action 'self' mailto:"
+    # - Google Fonts is allowed for Inter
+    # - JSON-LD is allowed via a fixed sha256 hash (no unsafe-inline scripts)
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; frame-ancestors 'none'; img-src 'self' data:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; script-src 'self' 'sha256-l86mnFEafB/a5W0kxJdJ4J9mOpOityWlCUSU4hbAZ7s='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; object-src 'none'; form-action 'self' mailto:"
