@@ -85,6 +85,22 @@ npm run preview
 - Skills, projects, and experience: `src/data/portfolio.ts`
 - Approved testimonials (displayed on site): `src/data/testimonials.ts`
 
+### Testimonials (approve/decline)
+
+This portfolio supports client testimonial submissions + a simple approval flow.
+
+- Submissions are stored via Netlify Functions + Netlify Blobs.
+- Only approved testimonials are displayed.
+
+Setup:
+
+1. Deploy to Netlify (Functions + Blobs require a Netlify deploy).
+2. In Netlify → Site configuration → Environment variables, set:
+	- `TESTIMONIALS_ADMIN_TOKEN` (any long random string)
+3. On your live site, open the Testimonials section and click **Admin: Approve/Decline**.
+	- Enter your token and you’ll see pending items.
+	- Click **Approve** to publish, **Decline** to discard.
+
 ## Site structure (sections)
 
 - **Hero**: name, role, focus, CTA buttons, profile image.

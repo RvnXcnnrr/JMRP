@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Send, X } from 'lucide-react'
+import { Check, Send, Trash2, X } from 'lucide-react'
 import { approvedTestimonials } from '../data/testimonials'
 
 function FieldLabel({ htmlFor, children }: { htmlFor: string; children: string }) {
@@ -18,10 +18,37 @@ function formatMeta(t: { role?: string; company?: string }) {
 }
 
 export function TestimonialsSection() {
+  const [testimonials, setTestimonials] = useState(approvedTestimonials)
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const closeButtonRef = useRef<HTMLButtonElement | null>(null)
+
+  const [adminToken, setAdminToken] = useState<string>(() => localStorage.getItem('testimonials_admin_token') || '')
+  const [adminOpen, setAdminOpen] = useState(false)
+  const [pending, setPending] = useState<any[]>([])
+  const [adminStatus, setAdminStatus] = useState<'idle' | 'loading' | 'error'>('idle')
+  const [adminError, setAdminError] = useState<string | null>(null)
+
+  useEffect(() => {
+    // Public list is fetched only on the deployed site.
+    if (!import.meta.env.PROD) return
+
+    const load = async () => {
+      try {
+        const res = await fetch('/.netlify/functions/testimonials-approved', { headers: { Accept: 'application/json' } })
+        if (!res.ok) throw new Error(`Failed to load testimonials (${res.status})`)
+        const data = await res.json()
+        if (data && data.ok && Array.isArray(data.testimonials)) {
+          setTestimonials(data.testimonials)
+        }
+      } catch {
+        // Keep local fallback.
+      }
+    }
+
+    void load()
+  }, [])
 
   useEffect(() => {
     if (!confirmOpen) return
@@ -43,24 +70,90 @@ export function TestimonialsSection() {
 
   const submitToNetlify = async (form: HTMLFormElement) => {
     if (import.meta.env.DEV) {
-      throw new Error('Netlify Forms only works on the deployed site (not on `npm run dev`).')
+      throw new Error('Testimonial submissions work on the deployed site (Netlify), not on `npm run dev`.')
     }
 
     const formData = new FormData(form)
-    if (!formData.get('form-name')) formData.set('form-name', 'testimonials')
-
-    const body = new URLSearchParams()
+    const payload: Record<string, string> = {}
     for (const [key, value] of formData.entries()) {
-      if (typeof value === 'string') body.append(key, value)
+      if (typeof value === 'string') payload[key] = value
     }
 
-    const res = await fetch('/', {
+    const res = await fetch('/.netlify/functions/testimonials-submit', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: body.toString(),
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(payload),
     })
 
-    if (!res.ok) throw new Error(`Request failed (${res.status})`)
+    const data = await res.json().catch(() => null)
+    if (!res.ok || !data?.ok) {
+      throw new Error((data && data.error) || `Request failed (${res.status})`)
+    }
+  }
+
+  const loadPending = async () => {
+    if (!import.meta.env.PROD) {
+      setAdminError('Admin approvals are available on the deployed Netlify site.')
+      setAdminStatus('error')
+      return
+    }
+
+    setAdminStatus('loading')
+    setAdminError(null)
+
+    try {
+      const res = await fetch('/.netlify/functions/testimonials-pending', {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${adminToken}`,
+        },
+      })
+
+      const data = await res.json().catch(() => null)
+      if (!res.ok || !data?.ok) throw new Error((data && data.error) || `Failed (${res.status})`)
+      setPending(Array.isArray(data.pending) ? data.pending : [])
+      setAdminStatus('idle')
+    } catch (err) {
+      setAdminStatus('error')
+      setAdminError(err instanceof Error ? err.message : 'Failed to load pending testimonials')
+    }
+  }
+
+  const moderate = async (id: string, action: 'approve' | 'decline') => {
+    if (!import.meta.env.PROD) return
+
+    setAdminStatus('loading')
+    setAdminError(null)
+
+    try {
+      const res = await fetch('/.netlify/functions/testimonials-moderate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          Authorization: `Bearer ${adminToken}`,
+        },
+        body: JSON.stringify({ id, action }),
+      })
+
+      const data = await res.json().catch(() => null)
+      if (!res.ok || !data?.ok) throw new Error((data && data.error) || `Failed (${res.status})`)
+
+      // Refresh both lists.
+      await loadPending()
+      try {
+        const a = await fetch('/.netlify/functions/testimonials-approved', { headers: { Accept: 'application/json' } })
+        const j = await a.json().catch(() => null)
+        if (a.ok && j?.ok && Array.isArray(j.testimonials)) setTestimonials(j.testimonials)
+      } catch {
+        // ignore
+      }
+    } catch (err) {
+      setAdminStatus('error')
+      setAdminError(err instanceof Error ? err.message : 'Failed to update testimonial')
+    } finally {
+      if (adminStatus !== 'error') setAdminStatus('idle')
+    }
   }
 
   return (
@@ -85,7 +178,7 @@ export function TestimonialsSection() {
         </p>
 
         <div className="mt-10 grid gap-4 md:grid-cols-2">
-          {approvedTestimonials.length === 0 ? (
+          {testimonials.length === 0 ? (
             <div className="group relative overflow-hidden rounded-3xl border border-slate-200/70 bg-white/70 p-6 shadow-[0_1px_0_rgba(255,255,255,0.65),0_18px_50px_rgba(2,6,23,0.08)] backdrop-blur dark:border-white/10 dark:bg-white/[0.04] dark:shadow-[0_1px_0_rgba(255,255,255,0.04),0_18px_60px_rgba(0,0,0,0.55)]">
               <p className="text-sm font-semibold text-slate-900 dark:text-[#e5e5e5]">No testimonials yet</p>
               <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-white/70">
@@ -93,7 +186,7 @@ export function TestimonialsSection() {
               </p>
             </div>
           ) : (
-            approvedTestimonials.map((t, i) => {
+            testimonials.map((t: any, i: number) => {
               const meta = formatMeta(t)
               return (
                 <figure
@@ -115,12 +208,127 @@ export function TestimonialsSection() {
                     {t.project ? (
                       <p className="mt-1 text-xs text-slate-500 dark:text-white/55">Project: {t.project}</p>
                     ) : null}
-                    {t.date ? <p className="mt-1 text-xs text-slate-500 dark:text-white/55">{t.date}</p> : null}
+                    {t.date || t.approvedAt ? (
+                      <p className="mt-1 text-xs text-slate-500 dark:text-white/55">
+                        {t.date || new Date(String(t.approvedAt)).toLocaleDateString(undefined, { year: 'numeric', month: 'short' })}
+                      </p>
+                    ) : null}
                   </figcaption>
                 </figure>
               )
             })
           )}
+        </div>
+
+        <div className="mt-8">
+          <button
+            type="button"
+            className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 hover:text-slate-900 dark:text-white/55 dark:hover:text-white"
+            onClick={async () => {
+              const next = !adminOpen
+              setAdminOpen(next)
+              if (next) {
+                const token = adminToken || window.prompt('Admin token (for approve/decline):', '') || ''
+                const cleaned = token.trim()
+                if (cleaned) {
+                  localStorage.setItem('testimonials_admin_token', cleaned)
+                  setAdminToken(cleaned)
+                }
+
+                if (cleaned) await loadPending()
+              }
+            }}
+          >
+            {adminOpen ? 'Hide Admin' : 'Admin: Approve/Decline'}
+          </button>
+
+          {adminOpen ? (
+            <div className="mt-4 group relative overflow-hidden rounded-3xl border border-slate-200/70 bg-white/70 p-6 shadow-[0_1px_0_rgba(255,255,255,0.65),0_18px_50px_rgba(2,6,23,0.08)] backdrop-blur dark:border-white/10 dark:bg-white/[0.04] dark:shadow-[0_1px_0_rgba(255,255,255,0.04),0_18px_60px_rgba(0,0,0,0.55)] sm:p-8">
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -inset-16 -z-10 opacity-45 blur-2xl bg-gradient-to-br from-slate-500/10 via-cyan-500/10 to-transparent"
+              />
+
+              <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-slate-900 dark:text-[#e5e5e5]">Pending testimonials</p>
+                  <p className="mt-1 text-sm text-slate-600 dark:text-white/70">
+                    Approve to publish, decline to discard.
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    className="rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
+                    onClick={loadPending}
+                    disabled={adminStatus === 'loading'}
+                  >
+                    Refresh
+                  </button>
+                  <button
+                    type="button"
+                    className="rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
+                    onClick={() => {
+                      localStorage.removeItem('testimonials_admin_token')
+                      setAdminToken('')
+                      setPending([])
+                    }}
+                  >
+                    Clear Token
+                  </button>
+                </div>
+              </div>
+
+              {adminError ? <p className="relative mt-4 text-sm text-rose-600 dark:text-rose-300">{adminError}</p> : null}
+
+              <div className="relative mt-6 grid gap-4 md:grid-cols-2">
+                {pending.length === 0 ? (
+                  <div className="rounded-2xl border border-slate-200/70 bg-white/60 p-5 text-sm text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-white/70">
+                    No pending items.
+                  </div>
+                ) : (
+                  pending.map((t) => {
+                    const meta = formatMeta(t)
+                    return (
+                      <div
+                        key={t.id}
+                        className="rounded-2xl border border-slate-200/70 bg-white/60 p-5 dark:border-white/10 dark:bg-white/5"
+                      >
+                        <p className="text-sm font-semibold text-slate-900 dark:text-[#e5e5e5]">{t.name}</p>
+                        {meta ? <p className="mt-1 text-sm text-slate-600 dark:text-white/70">{meta}</p> : null}
+                        {t.project ? (
+                          <p className="mt-1 text-xs text-slate-500 dark:text-white/55">Project: {t.project}</p>
+                        ) : null}
+                        <p className="mt-3 text-sm leading-7 text-slate-700 dark:text-white/80">“{t.message}”</p>
+
+                        <div className="mt-4 flex flex-wrap gap-2">
+                          <button
+                            type="button"
+                            className="inline-flex items-center gap-2 rounded-xl bg-cyan-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-cyan-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 disabled:opacity-60"
+                            onClick={() => moderate(t.id, 'approve')}
+                            disabled={adminStatus === 'loading'}
+                          >
+                            <Check size={18} aria-hidden="true" />
+                            Approve
+                          </button>
+                          <button
+                            type="button"
+                            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 disabled:opacity-60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
+                            onClick={() => moderate(t.id, 'decline')}
+                            disabled={adminStatus === 'loading'}
+                          >
+                            <Trash2 size={18} aria-hidden="true" />
+                            Decline
+                          </button>
+                        </div>
+                      </div>
+                    )
+                  })
+                )}
+              </div>
+            </div>
+          ) : null}
         </div>
 
         <div className="mt-8 group relative overflow-hidden rounded-3xl border border-slate-200/70 bg-white/70 p-6 shadow-[0_1px_0_rgba(255,255,255,0.65),0_18px_50px_rgba(2,6,23,0.08)] backdrop-blur transition duration-300 dark:border-white/10 dark:bg-white/[0.04] dark:shadow-[0_1px_0_rgba(255,255,255,0.04),0_18px_60px_rgba(0,0,0,0.55)] sm:p-8">
