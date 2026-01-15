@@ -42,6 +42,10 @@ export function TestimonialsSection() {
   }, [confirmOpen])
 
   const submitToNetlify = async (form: HTMLFormElement) => {
+    if (import.meta.env.DEV) {
+      throw new Error('Netlify Forms only works on the deployed site (not on `npm run dev`).')
+    }
+
     const formData = new FormData(form)
     if (!formData.get('form-name')) formData.set('form-name', 'testimonials')
 

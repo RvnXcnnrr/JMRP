@@ -49,6 +49,10 @@ export function ContactSection() {
   }, [confirmOpen])
 
   const submitToNetlify = async (form: HTMLFormElement) => {
+    if (import.meta.env.DEV) {
+      throw new Error('Netlify Forms only works on the deployed site (not on `npm run dev`).')
+    }
+
     const formData = new FormData(form)
     // Ensure Netlify receives the form name.
     if (!formData.get('form-name')) formData.set('form-name', 'contact')
