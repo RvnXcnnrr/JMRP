@@ -62,6 +62,15 @@ export const projects: Project[] = [
     },
   },
   {
+    title: 'RMTI Training — School Website',
+    description:
+      'A public-facing website for Remedios Miague Technical Institute Inc. (TESDA private school), deployed on Netlify.',
+    stack: ['School Website', 'TESDA', 'Netlify'],
+    links: {
+      demo: 'https://rmti-training.netlify.app/',
+    },
+  },
+  {
     title: 'SmarTanom — Hydroponics Monitoring (Capstone)',
     description:
       'Hydroponics growers need stable water conditions, but manual checks are inconsistent and easy to miss. I built an IoT monitoring system that tracks pH, TDS, EC, water level, water temperature, and turbidity, with threshold-based alerts when readings go below or above plant limits.',

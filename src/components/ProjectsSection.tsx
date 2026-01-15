@@ -35,6 +35,7 @@ function ActionButton({ href, children, variant }: ActionButtonProps) {
 export function ProjectsSection() {
   const smarTanomImage = '/assets/projects/smartanom.jpg'
   const smartSimsImage = '/assets/projects/smartsims.jpg'
+  const rmtiTrainingUrl = 'https://rmti-training.netlify.app/'
 
   return (
     <section
@@ -150,14 +151,20 @@ export function ProjectsSection() {
           <div className="group relative overflow-hidden rounded-3xl border border-slate-200/70 bg-white/70 p-6 shadow-[0_1px_0_rgba(255,255,255,0.65),0_18px_50px_rgba(2,6,23,0.08)] backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-cyan-500/40 hover:shadow-md dark:border-white/10 dark:bg-white/[0.04] dark:shadow-[0_1px_0_rgba(255,255,255,0.04),0_18px_60px_rgba(0,0,0,0.55)] dark:hover:border-cyan-300/30">
             <div aria-hidden="true" className="pointer-events-none absolute -inset-16 -z-10 opacity-35 blur-2xl transition-opacity duration-300 group-hover:opacity-60 bg-gradient-to-br from-cyan-500/12 via-blue-500/10 to-transparent" />
 
-            <h3 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-[#e5e5e5]">More Projects</h3>
+            <h3 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-[#e5e5e5]">RMTI Training Website</h3>
             <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-white/70">
-              I’m continuously building—ask and I’ll share additional work, demos, and source code.
+              A public-facing website for Remedios Miague Technical Institute Inc. (TESDA private school), deployed on Netlify.
             </p>
             <div className="mt-5 flex flex-wrap gap-2">
-              <Tag>[IoT]</Tag>
-              <Tag>[Backend]</Tag>
-              <Tag>[Systems]</Tag>
+              <Tag>[School]</Tag>
+              <Tag>[TESDA]</Tag>
+              <Tag>[Netlify]</Tag>
+            </div>
+
+            <div className="mt-6 flex flex-wrap gap-3">
+              <ActionButton href={rmtiTrainingUrl} variant="primary">
+                View Live
+              </ActionButton>
             </div>
           </div>
         </div>
