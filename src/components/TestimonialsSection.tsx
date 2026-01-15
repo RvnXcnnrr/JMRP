@@ -29,6 +29,7 @@ export function TestimonialsSection() {
   const [pending, setPending] = useState<any[]>([])
   const [adminStatus, setAdminStatus] = useState<'idle' | 'loading' | 'error'>('idle')
   const [adminError, setAdminError] = useState<string | null>(null)
+  const [adminAuthorized, setAdminAuthorized] = useState(false)
 
   const [tokenModalOpen, setTokenModalOpen] = useState(false)
   const [tokenDraft, setTokenDraft] = useState('')
@@ -132,6 +133,7 @@ export function TestimonialsSection() {
     if (!token) {
       setAdminError('Missing admin token.')
       setAdminStatus('error')
+      setAdminAuthorized(false)
       return
     }
 
@@ -149,10 +151,14 @@ export function TestimonialsSection() {
       const data = await res.json().catch(() => null)
       if (!res.ok || !data?.ok) throw new Error((data && data.error) || `Failed (${res.status})`)
       setPending(Array.isArray(data.pending) ? data.pending : [])
+      setAdminAuthorized(true)
       setAdminStatus('idle')
     } catch (err) {
       setAdminStatus('error')
-      setAdminError(err instanceof Error ? err.message : 'Failed to load pending testimonials')
+      const message = err instanceof Error ? err.message : 'Failed to load pending testimonials'
+      const unauthorized = /unauthorized/i.test(message) || /\(401\)/.test(message) || / 401\b/.test(message)
+      setAdminError(unauthorized ? 'Not authorized' : message)
+      setAdminAuthorized(false)
     }
   }
 
@@ -190,7 +196,10 @@ export function TestimonialsSection() {
     } catch (err) {
       failed = true
       setAdminStatus('error')
-      setAdminError(err instanceof Error ? err.message : 'Failed to update testimonial')
+      const message = err instanceof Error ? err.message : 'Failed to update testimonial'
+      const unauthorized = /unauthorized/i.test(message) || /\(401\)/.test(message) || / 401\b/.test(message)
+      setAdminError(unauthorized ? 'Not authorized' : message)
+      if (unauthorized) setAdminAuthorized(false)
     } finally {
       if (!failed) setAdminStatus('idle')
     }
@@ -230,7 +239,10 @@ export function TestimonialsSection() {
     } catch (err) {
       failed = true
       setAdminStatus('error')
-      setAdminError(err instanceof Error ? err.message : 'Failed to delete testimonial')
+      const message = err instanceof Error ? err.message : 'Failed to delete testimonial'
+      const unauthorized = /unauthorized/i.test(message) || /\(401\)/.test(message) || / 401\b/.test(message)
+      setAdminError(unauthorized ? 'Not authorized' : message)
+      if (unauthorized) setAdminAuthorized(false)
     } finally {
       if (!failed) setAdminStatus('idle')
     }
@@ -367,100 +379,104 @@ export function TestimonialsSection() {
 
               {adminError ? <p className="relative mt-4 text-sm text-rose-600 dark:text-rose-300">{adminError}</p> : null}
 
-              <div className="relative mt-6 grid gap-4 md:grid-cols-2">
-                {pending.length === 0 ? (
-                  <div className="rounded-2xl border border-slate-200/70 bg-white/60 p-5 text-sm text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-white/70">
-                    No pending items.
-                  </div>
-                ) : (
-                  pending.map((t) => {
-                    const meta = formatMeta(t)
-                    return (
-                      <div
-                        key={t.id}
-                        className="rounded-2xl border border-slate-200/70 bg-white/60 p-5 dark:border-white/10 dark:bg-white/5"
-                      >
-                        <p className="text-sm font-semibold text-slate-900 dark:text-[#e5e5e5]">{t.name}</p>
-                        {meta ? <p className="mt-1 text-sm text-slate-600 dark:text-white/70">{meta}</p> : null}
-                        {t.project ? (
-                          <p className="mt-1 text-xs text-slate-500 dark:text-white/55">Project: {t.project}</p>
-                        ) : null}
-                        <p className="mt-3 text-sm leading-7 text-slate-700 dark:text-white/80">“{t.message}”</p>
-
-                        <div className="mt-4 flex flex-wrap gap-2">
-                          <button
-                            type="button"
-                            className="inline-flex items-center gap-2 rounded-xl bg-cyan-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-cyan-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 disabled:opacity-60"
-                            onClick={() => moderate(t.id, 'approve')}
-                            disabled={adminStatus === 'loading'}
-                          >
-                            <Check size={18} aria-hidden="true" />
-                            Approve
-                          </button>
-                          <button
-                            type="button"
-                            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 disabled:opacity-60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
-                            onClick={() => moderate(t.id, 'decline')}
-                            disabled={adminStatus === 'loading'}
-                          >
-                            <Trash2 size={18} aria-hidden="true" />
-                            Decline
-                          </button>
-                        </div>
+              {adminAuthorized ? (
+                <>
+                  <div className="relative mt-6 grid gap-4 md:grid-cols-2">
+                    {pending.length === 0 ? (
+                      <div className="rounded-2xl border border-slate-200/70 bg-white/60 p-5 text-sm text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-white/70">
+                        No pending items.
                       </div>
-                    )
-                  })
-                )}
-              </div>
-
-              <div className="relative mt-8">
-                <p className="text-sm font-semibold text-slate-900 dark:text-[#e5e5e5]">Approved (published)</p>
-                <p className="mt-1 text-sm text-slate-600 dark:text-white/70">You can remove published testimonials here.</p>
-
-                <div className="mt-4 grid gap-3">
-                  {testimonials.length === 0 ? (
-                    <div className="rounded-2xl border border-slate-200/70 bg-white/60 p-5 text-sm text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-white/70">
-                      No published testimonials.
-                    </div>
-                  ) : (
-                    testimonials.map((t: any, i: number) => {
-                      const meta = formatMeta(t)
-                      const id = typeof t.id === 'string' ? t.id : ''
-                      return (
-                        <div
-                          key={id || `${t.name}-${i}`}
-                          className="flex flex-col gap-3 rounded-2xl border border-slate-200/70 bg-white/60 p-5 dark:border-white/10 dark:bg-white/5 sm:flex-row sm:items-start sm:justify-between"
-                        >
-                          <div>
+                    ) : (
+                      pending.map((t) => {
+                        const meta = formatMeta(t)
+                        return (
+                          <div
+                            key={t.id}
+                            className="rounded-2xl border border-slate-200/70 bg-white/60 p-5 dark:border-white/10 dark:bg-white/5"
+                          >
                             <p className="text-sm font-semibold text-slate-900 dark:text-[#e5e5e5]">{t.name}</p>
                             {meta ? <p className="mt-1 text-sm text-slate-600 dark:text-white/70">{meta}</p> : null}
-                            <p className="mt-2 text-sm text-slate-700 dark:text-white/80 line-clamp-2">“{t.message}”</p>
-                          </div>
+                            {t.project ? (
+                              <p className="mt-1 text-xs text-slate-500 dark:text-white/55">Project: {t.project}</p>
+                            ) : null}
+                            <p className="mt-3 text-sm leading-7 text-slate-700 dark:text-white/80">“{t.message}”</p>
 
-                          <button
-                            type="button"
-                            className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 disabled:opacity-60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
-                            onClick={() => {
-                              if (!id) {
-                                setAdminError('This testimonial cannot be deleted because it has no id. Resubmit/approve again to get an id.')
-                                setAdminStatus('error')
-                                return
-                              }
-                              if (window.confirm('Delete this published testimonial?')) {
-                                void deleteApproved(id)
-                              }
-                            }}
-                            disabled={adminStatus === 'loading'}
-                          >
-                            <Trash2 size={18} aria-hidden="true" />
-                            Delete
-                          </button>
+                            <div className="mt-4 flex flex-wrap gap-2">
+                              <button
+                                type="button"
+                                className="inline-flex items-center gap-2 rounded-xl bg-cyan-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-cyan-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 disabled:opacity-60"
+                                onClick={() => moderate(t.id, 'approve')}
+                                disabled={adminStatus === 'loading'}
+                              >
+                                <Check size={18} aria-hidden="true" />
+                                Approve
+                              </button>
+                              <button
+                                type="button"
+                                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 disabled:opacity-60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
+                                onClick={() => moderate(t.id, 'decline')}
+                                disabled={adminStatus === 'loading'}
+                              >
+                                <Trash2 size={18} aria-hidden="true" />
+                                Decline
+                              </button>
+                            </div>
+                          </div>
+                        )
+                      })
+                    )}
+                  </div>
+
+                  <div className="relative mt-8">
+                    <p className="text-sm font-semibold text-slate-900 dark:text-[#e5e5e5]">Approved (published)</p>
+                    <p className="mt-1 text-sm text-slate-600 dark:text-white/70">You can remove published testimonials here.</p>
+
+                    <div className="mt-4 grid gap-3">
+                      {testimonials.length === 0 ? (
+                        <div className="rounded-2xl border border-slate-200/70 bg-white/60 p-5 text-sm text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-white/70">
+                          No published testimonials.
                         </div>
-                      )
-                    })
-                  )}
-                </div>
-              </div>
+                      ) : (
+                        testimonials.map((t: any, i: number) => {
+                          const meta = formatMeta(t)
+                          const id = typeof t.id === 'string' ? t.id : ''
+                          return (
+                            <div
+                              key={id || `${t.name}-${i}`}
+                              className="flex flex-col gap-3 rounded-2xl border border-slate-200/70 bg-white/60 p-5 dark:border-white/10 dark:bg-white/5 sm:flex-row sm:items-start sm:justify-between"
+                            >
+                              <div>
+                                <p className="text-sm font-semibold text-slate-900 dark:text-[#e5e5e5]">{t.name}</p>
+                                {meta ? <p className="mt-1 text-sm text-slate-600 dark:text-white/70">{meta}</p> : null}
+                                <p className="mt-2 text-sm text-slate-700 dark:text-white/80 line-clamp-2">“{t.message}”</p>
+                              </div>
+
+                              <button
+                                type="button"
+                                className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 disabled:opacity-60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
+                                onClick={() => {
+                                  if (!id) {
+                                    setAdminError('This testimonial cannot be deleted because it has no id. Resubmit/approve again to get an id.')
+                                    setAdminStatus('error')
+                                    return
+                                  }
+                                  if (window.confirm('Delete this published testimonial?')) {
+                                    void deleteApproved(id)
+                                  }
+                                }}
+                                disabled={adminStatus === 'loading'}
+                              >
+                                <Trash2 size={18} aria-hidden="true" />
+                                Delete
+                              </button>
+                            </div>
+                          )
+                        })
+                      )}
+                    </div>
+                  </div>
+                </>
+              ) : null}
             </div>
           ) : null}
         </div>
