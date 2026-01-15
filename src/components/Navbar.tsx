@@ -1,14 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { Menu, Moon, Sun, X } from 'lucide-react'
 
 type NavLink = { href: string; label: string }
+type Theme = 'light' | 'dark'
 
 type NavbarProps = {
   links: NavLink[]
   onToggleTheme: () => void
   themeLabel: string
+  theme: Theme
 }
 
-export function Navbar({ links, onToggleTheme, themeLabel }: NavbarProps) {
+export function Navbar({ links, onToggleTheme, themeLabel, theme }: NavbarProps) {
   const [open, setOpen] = useState(false)
 
   const menuButtonRef = useRef<HTMLButtonElement | null>(null)
@@ -94,6 +97,15 @@ export function Navbar({ links, onToggleTheme, themeLabel }: NavbarProps) {
   }, [open])
 
   useEffect(() => {
+    if (!open) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = prev
+    }
+  }, [open])
+
+  useEffect(() => {
     if (open) {
       firstMobileLinkRef.current?.focus()
       return
@@ -111,7 +123,7 @@ export function Navbar({ links, onToggleTheme, themeLabel }: NavbarProps) {
         Skip to content
       </a>
 
-      <div className="border-b border-slate-200/80 bg-white/85 backdrop-blur dark:border-white/10 dark:bg-slate-950/40">
+      <div className="border-b border-slate-200/80 bg-white/85 backdrop-blur dark:border-white/10 dark:bg-[#0a0a0a]/70">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
           <a href="#home" className="group inline-flex items-center gap-2">
             <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-sky-500/20 to-indigo-500/20 ring-1 ring-slate-200 dark:ring-white/10">
@@ -129,7 +141,7 @@ export function Navbar({ links, onToggleTheme, themeLabel }: NavbarProps) {
                 onClick={(e) => {
                   if (scrollToHash(l.href)) e.preventDefault()
                 }}
-                className="text-sm font-medium text-slate-700 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:text-slate-200 dark:hover:text-white"
+                className="text-sm font-medium text-slate-700 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:text-slate-200 dark:hover:text-white"
               >
                 {l.label}
               </a>
@@ -140,71 +152,96 @@ export function Navbar({ links, onToggleTheme, themeLabel }: NavbarProps) {
             <button
               type="button"
               onClick={onToggleTheme}
-              className="inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white/80 px-3 text-sm font-medium text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
+              className="inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white/80 px-3 text-sm font-medium text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
               aria-label={themeLabel}
               title={themeLabel}
             >
               <span className="hidden sm:inline">Theme</span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path
-                  d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z"
-                  className="stroke-slate-700 dark:stroke-slate-200"
-                  strokeWidth="2"
-                />
-                <path
-                  d="M12 2v2M12 20v2M4 12H2M22 12h-2M5.64 5.64 4.22 4.22M19.78 19.78l-1.42-1.42M18.36 5.64l1.42-1.42M4.22 19.78l1.42-1.42"
-                  className="stroke-slate-700 dark:stroke-slate-200"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
+              {theme === 'dark' ? <Sun size={18} aria-hidden="true" /> : <Moon size={18} aria-hidden="true" />}
             </button>
 
             <button
               type="button"
               onClick={() => setOpen((v) => !v)}
               ref={menuButtonRef}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white/80 text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10 md:hidden"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white/80 text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10 md:hidden"
               aria-label={open ? 'Close menu' : 'Open menu'}
               aria-expanded={open}
               aria-controls="mobile-menu"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path
-                  d={open ? 'M18 6 6 18M6 6l12 12' : 'M4 7h16M4 12h16M4 17h16'}
-                  className="stroke-current"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
+              {open ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
             </button>
           </div>
         </div>
+      </div>
 
-        {open ? (
-          <div className="md:hidden" id="mobile-menu" ref={mobilePanelRef}>
-            <div className="mx-auto max-w-6xl px-4 pb-4 sm:px-6">
-              <div className="rounded-2xl border border-slate-200 bg-white/85 p-3 shadow-sm backdrop-blur dark:border-white/10 dark:bg-slate-950/40">
-                <nav className="flex flex-col" aria-label="Mobile">
-                  {linkItems.map((l, idx) => (
-                    <a
-                      key={l.href}
-                      href={l.href}
-                      ref={idx === 0 ? firstMobileLinkRef : undefined}
-                      onClick={(e) => {
-                        if (scrollToHash(l.href)) e.preventDefault()
-                        setOpen(false)
-                      }}
-                      className="rounded-xl px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:text-slate-200 dark:hover:bg-white/5"
-                    >
-                      {l.label}
-                    </a>
-                  ))}
-                </nav>
-              </div>
-            </div>
+      {/* Mobile drawer */}
+      <div
+        className={
+          'md:hidden fixed inset-0 z-50 transition ' +
+          (open ? 'pointer-events-auto' : 'pointer-events-none')
+        }
+        aria-hidden={open ? undefined : true}
+      >
+        <div
+          className={
+            'absolute inset-0 bg-black/40 backdrop-blur-[2px] transition-opacity duration-300 ' +
+            (open ? 'opacity-100' : 'opacity-0')
+          }
+          onClick={() => setOpen(false)}
+        />
+
+        <div
+          id="mobile-menu"
+          ref={mobilePanelRef}
+          className={
+            'absolute right-0 top-0 h-full w-[min(340px,86vw)] border-l border-slate-200 bg-white/90 p-4 shadow-2xl transition-transform duration-300 dark:border-white/10 dark:bg-[#0a0a0a]/90 ' +
+            (open ? 'translate-x-0' : 'translate-x-full')
+          }
+          role="dialog"
+          aria-modal="true"
+          aria-label="Mobile navigation"
+        >
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-semibold text-slate-900 dark:text-slate-50">Navigation</p>
+            <button
+              type="button"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white/80 text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
+              onClick={() => setOpen(false)}
+              aria-label="Close menu"
+            >
+              <X size={20} aria-hidden="true" />
+            </button>
           </div>
-        ) : null}
+
+          <nav className="mt-4 flex flex-col" aria-label="Mobile">
+            {linkItems.map((l, idx) => (
+              <a
+                key={l.href}
+                href={l.href}
+                ref={idx === 0 ? firstMobileLinkRef : undefined}
+                onClick={(e) => {
+                  if (scrollToHash(l.href)) e.preventDefault()
+                  setOpen(false)
+                }}
+                className="rounded-xl px-3 py-3 text-sm font-medium text-slate-700 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:text-slate-200 dark:hover:bg-white/5"
+              >
+                {l.label}
+              </a>
+            ))}
+          </nav>
+
+          <div className="mt-6">
+            <button
+              type="button"
+              onClick={onToggleTheme}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
+            >
+              {theme === 'dark' ? <Sun size={18} aria-hidden="true" /> : <Moon size={18} aria-hidden="true" />}
+              Toggle theme
+            </button>
+          </div>
+        </div>
       </div>
     </header>
   )

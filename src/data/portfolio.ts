@@ -102,25 +102,27 @@ export const certifications: CertificationItem[] = [
   {
     title: 'OJT Certificate — Hube Computer',
     issuer: 'Hube Computer',
-    notes: 'Available upon request.',
-    isSensitive: true,
+    imageSrc: '/assets/certificates/hube-ojt.jpg',
+    imageAlt: 'OJT certificate from Hube Computer',
   },
   {
     title: 'NC II — Computer System Servicing (CSS)',
     issuer: 'TESDA (Technical Education and Skills Development Authority)',
-    notes: 'Available upon request.',
-    isSensitive: true,
+    notes:
+      'Graduated as a TESDA CSS student at Crossroads Training Institute Inc., Kolambog, Lapasan, Cagayan de Oro City, Philippines, 9000.',
+    imageSrc: '/assets/certificates/ncii-css.jpg',
+    imageAlt: 'TESDA NC II Computer System Servicing certificate',
   },
   {
     title: 'Cisco NetAcad — CyberOps Associate',
     issuer: 'University of Science and Technology of Southern Philippines (USTP) via Cisco Networking Academy',
-    notes: 'Available upon request.',
-    isSensitive: true,
+    imageSrc: '/assets/certificates/cyberops-associate.png',
+    imageAlt: 'Cisco Networking Academy CyberOps Associate certificate',
   },
   {
     title: 'CCNA — Enterprise Networking, Security, and Automation',
     issuer: 'University of Science and Technology of Southern Philippines (USTP) via Cisco Networking Academy',
-    notes: 'Available upon request.',
-    isSensitive: true,
+    imageSrc: '/assets/certificates/ccna-ensa.png',
+    imageAlt: 'CCNA Enterprise Networking, Security, and Automation certificate',
   },
 ]

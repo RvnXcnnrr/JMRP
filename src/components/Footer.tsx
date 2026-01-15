@@ -5,7 +5,7 @@ type FooterProps = {
 
 export function Footer({ quickLinks, socialLinks }: FooterProps) {
   return (
-    <footer className="border-t border-slate-200/80 bg-white/80 py-10 backdrop-blur dark:border-white/10 dark:bg-slate-950/25">
+    <footer className="border-t border-slate-200/80 bg-white/80 py-10 backdrop-blur dark:border-white/10 dark:bg-[#0a0a0a]">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="grid gap-6 sm:grid-cols-2 sm:items-center">
           <div>
@@ -24,7 +24,7 @@ export function Footer({ quickLinks, socialLinks }: FooterProps) {
                 <a
                   key={l.href}
                   href={l.href}
-                  className="text-sm font-medium text-slate-600 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:text-slate-300 dark:hover:text-white"
+                  className="text-sm font-medium text-slate-600 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:text-slate-300 dark:hover:text-white"
                 >
                   {l.label}
                 </a>
@@ -42,7 +42,7 @@ export function Footer({ quickLinks, socialLinks }: FooterProps) {
                     href={l.href}
                     target={l.href.startsWith('mailto:') ? undefined : '_blank'}
                     rel={l.href.startsWith('mailto:') ? undefined : 'noreferrer'}
-                    className="text-sm font-medium text-slate-600 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 dark:text-slate-300 dark:hover:text-white"
+                    className="text-sm font-medium text-slate-600 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:text-slate-300 dark:hover:text-white"
                   >
                     {l.label}
                   </a>
