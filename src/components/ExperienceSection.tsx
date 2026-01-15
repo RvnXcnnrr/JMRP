@@ -38,7 +38,7 @@ const TIMELINE: TimelineItem[] = [
 
 export function ExperienceSection() {
   return (
-    <section id="experience" tabIndex={-1} className="scroll-mt-24 py-14 sm:py-18">
+    <section id="experience" tabIndex={-1} className="scroll-mt-24 px-4 py-14 sm:px-6 sm:py-18 lg:px-10 2xl:px-16">
       <div data-reveal>
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-600 dark:text-cyan-200/80">Experience</p>
         <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 dark:text-[#e5e5e5] sm:text-4xl">

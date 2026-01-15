@@ -6,7 +6,7 @@ type FooterProps = {
 export function Footer({ quickLinks, socialLinks }: FooterProps) {
   return (
     <footer className="border-t border-slate-200/80 bg-white/80 py-10 backdrop-blur dark:border-white/10 dark:bg-[#0a0a0a]">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      <div className="w-full px-4 sm:px-6 lg:px-10 2xl:px-16">
         <div className="grid gap-6 sm:grid-cols-2 sm:items-center">
           <div>
             <p className="text-sm font-semibold text-slate-900 dark:text-slate-50">Portfolio</p>

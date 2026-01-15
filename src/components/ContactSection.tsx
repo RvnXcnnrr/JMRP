@@ -70,8 +70,8 @@ export function ContactSection() {
   }
 
   return (
-    <section id="contact" tabIndex={-1} className="scroll-mt-24 py-14 sm:py-18">
-      <div data-reveal className="mx-auto max-w-3xl">
+    <section id="contact" tabIndex={-1} className="scroll-mt-24 px-4 py-14 sm:px-6 sm:py-18 lg:px-10 2xl:px-16">
+      <div data-reveal className="w-full">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-600 dark:text-cyan-200/80">Contact</p>
         <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 dark:text-[#e5e5e5] sm:text-4xl">
           Ready to contribute to your team?
@@ -156,9 +156,6 @@ export function ContactSection() {
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-xs text-slate-500 dark:text-white/55">
-                This form is Netlify-ready (works when deployed on Netlify).
-              </p>
               <button
                 type="submit"
                 disabled={status === 'submitting'}

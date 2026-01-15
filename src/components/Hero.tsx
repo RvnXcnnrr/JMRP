@@ -18,7 +18,7 @@ export function Hero() {
     <section
       id="home"
       tabIndex={-1}
-      className="relative scroll-mt-24 overflow-hidden rounded-3xl border border-slate-200/70 bg-white/70 py-14 backdrop-blur dark:border-white/10 dark:bg-[#0a0a0a] sm:py-18"
+      className="relative scroll-mt-24 overflow-hidden bg-white/70 px-4 py-14 backdrop-blur dark:bg-[#0a0a0a] sm:px-6 sm:py-18 lg:px-10 2xl:px-16"
     >
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div className="absolute -top-28 left-1/2 h-[520px] w-[980px] -translate-x-1/2 rounded-full bg-gradient-to-br from-cyan-500/16 via-blue-500/10 to-transparent blur-3xl dark:from-cyan-500/22 dark:via-blue-500/12" />
@@ -26,7 +26,7 @@ export function Hero() {
         <div className="absolute inset-0 opacity-30 [mask-image:radial-gradient(60%_55%_at_50%_40%,black,transparent)] bg-[radial-gradient(circle_at_1px_1px,rgba(15,23,42,0.12)_1px,transparent_0)] dark:bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.08)_1px,transparent_0)] [background-size:18px_18px]" />
       </div>
 
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      <div className="w-full">
         <div className="grid items-center gap-12 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <div className="hero-intro flex flex-wrap gap-2" style={{ transitionDelay: '60ms' }} data-reveal>
@@ -78,6 +78,14 @@ export function Hero() {
                 className="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white/60 px-5 py-3 text-sm font-semibold text-slate-900 shadow-sm transition hover:bg-white hover:border-slate-400 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 active:scale-[0.99] motion-safe:hover:scale-[1.02] dark:border-white/20 dark:bg-white/0 dark:text-white dark:hover:bg-white/5 dark:hover:border-white/30"
               >
                 Contact Me
+              </a>
+
+              <a
+                href={profile.resumeSrc}
+                download
+                className="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white/60 px-5 py-3 text-sm font-semibold text-slate-900 shadow-sm transition hover:bg-white hover:border-slate-400 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 active:scale-[0.99] motion-safe:hover:scale-[1.02] dark:border-white/20 dark:bg-white/0 dark:text-white dark:hover:bg-white/5 dark:hover:border-white/30"
+              >
+                Download CV
               </a>
             </div>
           </div>

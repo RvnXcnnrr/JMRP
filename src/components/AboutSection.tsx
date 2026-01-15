@@ -26,7 +26,7 @@ export function AboutSection() {
     <section
       id="about"
       tabIndex={-1}
-      className="relative scroll-mt-24 overflow-hidden rounded-3xl border border-slate-200/70 bg-white/70 py-14 backdrop-blur dark:border-white/10 dark:bg-[#0a0a0a] sm:py-18"
+      className="relative scroll-mt-24 overflow-hidden bg-white/70 px-4 py-14 backdrop-blur dark:bg-[#0a0a0a] sm:px-6 sm:py-18 lg:px-10 2xl:px-16"
     >
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div className="absolute -top-24 left-1/2 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-gradient-to-br from-cyan-500/12 via-blue-500/10 to-transparent blur-3xl dark:from-cyan-500/14" />

@@ -43,7 +43,7 @@ function App() {
         theme={theme}
       />
 
-      <main id="main" tabIndex={-1} className="mx-auto max-w-6xl px-4 sm:px-6">
+      <main id="main" tabIndex={-1} className="w-full">
         <Hero />
 
         <AboutSection />

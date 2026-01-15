@@ -124,7 +124,7 @@ export function Navbar({ links, onToggleTheme, themeLabel, theme }: NavbarProps)
       </a>
 
       <div className="border-b border-slate-200/80 bg-white/85 backdrop-blur dark:border-white/10 dark:bg-[#0a0a0a]/70">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
+        <div className="flex w-full items-center justify-between px-4 py-3 sm:px-6 lg:px-10 2xl:px-16">
           <a href="#home" className="group inline-flex items-center gap-2">
             <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-sky-500/20 to-indigo-500/20 ring-1 ring-slate-200 dark:ring-white/10">
               <span className="text-[11px] font-semibold tracking-wide text-slate-800 dark:text-slate-100">
