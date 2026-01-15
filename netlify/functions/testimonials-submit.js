@@ -1,4 +1,5 @@
 import { getStore } from '@netlify/blobs'
+import crypto from 'node:crypto'
 
 function json(status, data) {
   return new Response(JSON.stringify(data), {
@@ -6,6 +7,7 @@ function json(status, data) {
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
       'Cache-Control': 'no-store',
+      'X-Content-Type-Options': 'nosniff',
     },
   })
 }

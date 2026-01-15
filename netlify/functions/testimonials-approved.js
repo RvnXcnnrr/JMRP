@@ -6,6 +6,7 @@ function json(status, data) {
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
       'Cache-Control': 'no-store',
+      'X-Content-Type-Options': 'nosniff',
     },
   })
 }

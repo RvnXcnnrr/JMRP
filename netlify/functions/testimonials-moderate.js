@@ -1,4 +1,5 @@
 import { getStore } from '@netlify/blobs'
+import crypto from 'node:crypto'
 
 function json(status, data) {
   return new Response(JSON.stringify(data), {
@@ -6,8 +7,19 @@ function json(status, data) {
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
       'Cache-Control': 'no-store',
+      'X-Content-Type-Options': 'nosniff',
     },
   })
+}
+
+function safeEquals(a, b) {
+  const aa = String(a || '')
+  const bb = String(b || '')
+  if (!aa || !bb) return false
+  const ab = Buffer.from(aa)
+  const bb2 = Buffer.from(bb)
+  if (ab.length !== bb2.length) return false
+  return crypto.timingSafeEqual(ab, bb2)
 }
 
 function getToken(req) {
@@ -23,7 +35,7 @@ export default async (req, context) => {
   if (!expected) return json(500, { ok: false, error: 'Missing TESTIMONIALS_ADMIN_TOKEN' })
 
   const token = getToken(req)
-  if (!token || token !== expected) return json(401, { ok: false, error: 'Unauthorized' })
+  if (!safeEquals(token, expected)) return json(401, { ok: false, error: 'Unauthorized' })
 
   const payload = await req.json().catch(() => null)
   const id = payload && typeof payload.id === 'string' ? payload.id : ''

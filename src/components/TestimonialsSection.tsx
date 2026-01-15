@@ -43,6 +43,8 @@ export function TestimonialsSection() {
   const tokenInputRef = useRef<HTMLInputElement | null>(null)
   const tokenCloseButtonRef = useRef<HTMLButtonElement | null>(null)
 
+  const hasAdminToken = adminToken.trim().length > 0
+
   useEffect(() => {
     // Public list is fetched only on the deployed site.
     if (!import.meta.env.PROD) return
@@ -416,43 +418,59 @@ export function TestimonialsSection() {
                 </div>
 
                 <div className="flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    className="rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
-                    onClick={() => loadPending()}
-                    disabled={adminStatus === 'loading'}
-                    aria-busy={isRefreshing ? true : undefined}
-                  >
-                    <span className="inline-flex items-center gap-2">
-                      <RefreshCw size={18} aria-hidden="true" className={isRefreshing ? 'animate-spin' : ''} />
-                      Refresh
-                    </span>
-                  </button>
-                  <button
-                    type="button"
-                    className="rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
-                    onClick={openTokenModal}
-                    disabled={adminStatus === 'loading'}
-                  >
-                    Change Token
-                  </button>
-                  <button
-                    type="button"
-                    className="rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
-                    onClick={() => {
-                      localStorage.removeItem('testimonials_admin_token')
-                      setAdminToken('')
-                      setPending([])
-                      setAdminAuthorized(false)
-                      setAdminError(null)
-                      setAdminStatus('idle')
-                      showToast('Admin token cleared')
-                    }}
-                  >
-                    Clear Token
-                  </button>
+                  {hasAdminToken ? (
+                    <>
+                      <button
+                        type="button"
+                        className="rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
+                        onClick={() => loadPending()}
+                        disabled={adminStatus === 'loading'}
+                        aria-busy={isRefreshing ? true : undefined}
+                      >
+                        <span className="inline-flex items-center gap-2">
+                          <RefreshCw size={18} aria-hidden="true" className={isRefreshing ? 'animate-spin' : ''} />
+                          Refresh
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        className="rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
+                        onClick={openTokenModal}
+                        disabled={adminStatus === 'loading'}
+                      >
+                        Change Token
+                      </button>
+                      <button
+                        type="button"
+                        className="rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
+                        onClick={() => {
+                          localStorage.removeItem('testimonials_admin_token')
+                          setAdminToken('')
+                          setPending([])
+                          setAdminAuthorized(false)
+                          setAdminError(null)
+                          setAdminStatus('idle')
+                          showToast('Admin token cleared')
+                        }}
+                      >
+                        Clear Token
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      type="button"
+                      className="rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
+                      onClick={openTokenModal}
+                    >
+                      Enter Admin Token
+                    </button>
+                  )}
                 </div>
               </div>
+
+              {!hasAdminToken ? (
+                <p className="relative mt-4 text-sm text-slate-600 dark:text-white/70">Enter your admin token to manage approvals.</p>
+              ) : null}
 
               {adminError ? <p className="relative mt-4 text-sm text-rose-600 dark:text-rose-300">{adminError}</p> : null}
 
