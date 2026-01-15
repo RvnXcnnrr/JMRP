@@ -30,6 +30,12 @@ export function TestimonialsSection() {
   const [adminStatus, setAdminStatus] = useState<'idle' | 'loading' | 'error'>('idle')
   const [adminError, setAdminError] = useState<string | null>(null)
 
+  const [tokenModalOpen, setTokenModalOpen] = useState(false)
+  const [tokenDraft, setTokenDraft] = useState('')
+  const [tokenModalError, setTokenModalError] = useState<string | null>(null)
+  const tokenInputRef = useRef<HTMLInputElement | null>(null)
+  const tokenCloseButtonRef = useRef<HTMLButtonElement | null>(null)
+
   useEffect(() => {
     // Public list is fetched only on the deployed site.
     if (!import.meta.env.PROD) return
@@ -68,6 +74,30 @@ export function TestimonialsSection() {
     if (confirmOpen) closeButtonRef.current?.focus()
   }, [confirmOpen])
 
+  useEffect(() => {
+    if (!tokenModalOpen) return
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        setTokenModalOpen(false)
+      }
+    }
+
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [tokenModalOpen])
+
+  useEffect(() => {
+    if (tokenModalOpen) tokenInputRef.current?.focus()
+  }, [tokenModalOpen])
+
+  const openTokenModal = () => {
+    setTokenDraft(adminToken)
+    setTokenModalError(null)
+    setTokenModalOpen(true)
+  }
+
   const submitToNetlify = async (form: HTMLFormElement) => {
     if (import.meta.env.DEV) {
       throw new Error('Testimonial submissions work on the deployed site (Netlify), not on `npm run dev`.')
@@ -91,9 +121,16 @@ export function TestimonialsSection() {
     }
   }
 
-  const loadPending = async () => {
+  const loadPending = async (tokenOverride?: string) => {
     if (!import.meta.env.PROD) {
       setAdminError('Admin approvals are available on the deployed Netlify site.')
+      setAdminStatus('error')
+      return
+    }
+
+    const token = (tokenOverride ?? adminToken).trim()
+    if (!token) {
+      setAdminError('Missing admin token.')
       setAdminStatus('error')
       return
     }
@@ -105,7 +142,7 @@ export function TestimonialsSection() {
       const res = await fetch('/.netlify/functions/testimonials-pending', {
         headers: {
           Accept: 'application/json',
-          Authorization: `Bearer ${adminToken}`,
+          Authorization: `Bearer ${token}`,
         },
       })
 
@@ -228,14 +265,11 @@ export function TestimonialsSection() {
               const next = !adminOpen
               setAdminOpen(next)
               if (next) {
-                const token = adminToken || window.prompt('Admin token (for approve/decline):', '') || ''
-                const cleaned = token.trim()
-                if (cleaned) {
-                  localStorage.setItem('testimonials_admin_token', cleaned)
-                  setAdminToken(cleaned)
+                if (!adminToken.trim()) {
+                  openTokenModal()
+                  return
                 }
-
-                if (cleaned) await loadPending()
+                await loadPending()
               }
             }}
           >
@@ -261,10 +295,18 @@ export function TestimonialsSection() {
                   <button
                     type="button"
                     className="rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
-                    onClick={loadPending}
+                    onClick={() => loadPending()}
                     disabled={adminStatus === 'loading'}
                   >
                     Refresh
+                  </button>
+                  <button
+                    type="button"
+                    className="rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
+                    onClick={openTokenModal}
+                    disabled={adminStatus === 'loading'}
+                  >
+                    Change Token
                   </button>
                   <button
                     type="button"
@@ -494,6 +536,94 @@ export function TestimonialsSection() {
                   onClick={() => setConfirmOpen(false)}
                 >
                   Close
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+        {tokenModalOpen ? (
+          <div
+            className="fixed inset-0 z-50 grid place-items-center px-4"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Admin token dialog"
+            onMouseDown={(e) => {
+              if (e.target === e.currentTarget) setTokenModalOpen(false)
+            }}
+          >
+            <div aria-hidden="true" className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />
+
+            <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-6 shadow-2xl dark:border-white/10 dark:bg-[#0a0a0a]">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-base font-semibold text-slate-900 dark:text-slate-50">Admin token</p>
+                  <p className="mt-1 text-sm text-slate-600 dark:text-white/70">
+                    Enter your secret token to approve/decline testimonials. Stored only in this browser.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  ref={tokenCloseButtonRef}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white/80 text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
+                  onClick={() => setTokenModalOpen(false)}
+                  aria-label="Close"
+                >
+                  <X size={18} aria-hidden="true" />
+                </button>
+              </div>
+
+              <div className="mt-5 space-y-2">
+                <label
+                  htmlFor="admin-token"
+                  className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-white/55"
+                >
+                  Token
+                </label>
+                <input
+                  id="admin-token"
+                  ref={tokenInputRef}
+                  value={tokenDraft}
+                  onChange={(e) => {
+                    setTokenDraft(e.target.value)
+                    setTokenModalError(null)
+                  }}
+                  type="password"
+                  autoComplete="off"
+                  placeholder="Paste TESTIMONIALS_ADMIN_TOKEN"
+                  className="w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-cyan-500/40 focus:ring-2 focus:ring-cyan-500/20 dark:border-white/10 dark:bg-white/5 dark:text-white"
+                />
+                {tokenModalError ? (
+                  <p className="text-sm text-rose-600 dark:text-rose-300">{tokenModalError}</p>
+                ) : null}
+              </div>
+
+              <div className="mt-5 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
+                  onClick={() => setTokenModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400"
+                  onClick={async () => {
+                    const cleaned = tokenDraft.trim()
+                    if (!cleaned) {
+                      setTokenModalError('Token is required.')
+                      return
+                    }
+
+                    localStorage.setItem('testimonials_admin_token', cleaned)
+                    setAdminToken(cleaned)
+                    setTokenModalOpen(false)
+                    setAdminOpen(true)
+                    await loadPending(cleaned)
+                  }}
+                >
+                  Save &amp; Load Pending
                 </button>
               </div>
             </div>
