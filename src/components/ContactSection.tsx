@@ -7,7 +7,7 @@ function ActionLink({ href, label, icon }: { href: string; label: string; icon: 
     <a
       href={href}
       target={href.startsWith('http') ? '_blank' : undefined}
-      rel={href.startsWith('http') ? 'noreferrer' : undefined}
+      rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
       className="group inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-cyan-500 px-5 py-3 text-sm font-semibold text-slate-950 shadow-sm transition hover:bg-cyan-400 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:bg-cyan-400 dark:hover:bg-cyan-300 sm:w-auto"
     >
       <span className="text-slate-950">{icon}</span>

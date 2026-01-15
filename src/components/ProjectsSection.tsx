@@ -21,7 +21,12 @@ function ActionButton({ href, children, variant }: ActionButtonProps) {
       : 'inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white/60 px-5 py-3 text-sm font-semibold text-slate-900 shadow-sm transition hover:bg-white hover:border-slate-400 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 active:scale-[0.99] motion-safe:hover:scale-[1.02] dark:border-white/20 dark:bg-white/0 dark:text-white dark:hover:bg-white/5 dark:hover:border-white/30'
 
   return (
-    <a href={href} target={href.startsWith('http') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noreferrer' : undefined} className={className}>
+    <a
+      href={href}
+      target={href.startsWith('http') ? '_blank' : undefined}
+      rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+      className={className}
+    >
       {children}
     </a>
   )

@@ -41,7 +41,7 @@ export function Footer({ quickLinks, socialLinks }: FooterProps) {
                     key={l.href}
                     href={l.href}
                     target={l.href.startsWith('mailto:') ? undefined : '_blank'}
-                    rel={l.href.startsWith('mailto:') ? undefined : 'noreferrer'}
+                    rel={l.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
                     className="text-sm font-medium text-slate-600 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:text-slate-300 dark:hover:text-white"
                   >
                     {l.label}
