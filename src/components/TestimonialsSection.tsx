@@ -193,6 +193,43 @@ export function TestimonialsSection() {
     }
   }
 
+  const deleteApproved = async (id: string) => {
+    if (!import.meta.env.PROD) return
+    if (!adminToken.trim()) return
+
+    setAdminStatus('loading')
+    setAdminError(null)
+
+    try {
+      const res = await fetch('/.netlify/functions/testimonials-delete-approved', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          Authorization: `Bearer ${adminToken}`,
+        },
+        body: JSON.stringify({ id }),
+      })
+
+      const data = await res.json().catch(() => null)
+      if (!res.ok || !data?.ok) throw new Error((data && data.error) || `Failed (${res.status})`)
+
+      // Refresh public list.
+      try {
+        const a = await fetch('/.netlify/functions/testimonials-approved', { headers: { Accept: 'application/json' } })
+        const j = await a.json().catch(() => null)
+        if (a.ok && j?.ok && Array.isArray(j.testimonials)) setTestimonials(j.testimonials)
+      } catch {
+        // ignore
+      }
+    } catch (err) {
+      setAdminStatus('error')
+      setAdminError(err instanceof Error ? err.message : 'Failed to delete testimonial')
+    } finally {
+      if (adminStatus !== 'error') setAdminStatus('idle')
+    }
+  }
+
   return (
     <section
       id="testimonials"
@@ -368,6 +405,55 @@ export function TestimonialsSection() {
                     )
                   })
                 )}
+              </div>
+
+              <div className="relative mt-8">
+                <p className="text-sm font-semibold text-slate-900 dark:text-[#e5e5e5]">Approved (published)</p>
+                <p className="mt-1 text-sm text-slate-600 dark:text-white/70">You can remove published testimonials here.</p>
+
+                <div className="mt-4 grid gap-3">
+                  {testimonials.length === 0 ? (
+                    <div className="rounded-2xl border border-slate-200/70 bg-white/60 p-5 text-sm text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-white/70">
+                      No published testimonials.
+                    </div>
+                  ) : (
+                    testimonials.map((t: any, i: number) => {
+                      const meta = formatMeta(t)
+                      const id = typeof t.id === 'string' ? t.id : ''
+                      return (
+                        <div
+                          key={id || `${t.name}-${i}`}
+                          className="flex flex-col gap-3 rounded-2xl border border-slate-200/70 bg-white/60 p-5 dark:border-white/10 dark:bg-white/5 sm:flex-row sm:items-start sm:justify-between"
+                        >
+                          <div>
+                            <p className="text-sm font-semibold text-slate-900 dark:text-[#e5e5e5]">{t.name}</p>
+                            {meta ? <p className="mt-1 text-sm text-slate-600 dark:text-white/70">{meta}</p> : null}
+                            <p className="mt-2 text-sm text-slate-700 dark:text-white/80 line-clamp-2">“{t.message}”</p>
+                          </div>
+
+                          <button
+                            type="button"
+                            className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 disabled:opacity-60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
+                            onClick={() => {
+                              if (!id) {
+                                setAdminError('This testimonial cannot be deleted because it has no id. Resubmit/approve again to get an id.')
+                                setAdminStatus('error')
+                                return
+                              }
+                              if (window.confirm('Delete this published testimonial?')) {
+                                void deleteApproved(id)
+                              }
+                            }}
+                            disabled={adminStatus === 'loading'}
+                          >
+                            <Trash2 size={18} aria-hidden="true" />
+                            Delete
+                          </button>
+                        </div>
+                      )
+                    })
+                  )}
+                </div>
               </div>
             </div>
           ) : null}
