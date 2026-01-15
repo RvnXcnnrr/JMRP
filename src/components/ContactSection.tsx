@@ -1,4 +1,5 @@
-import { Mail, Linkedin, Send } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Mail, Linkedin, Send, X } from 'lucide-react'
 import { profile } from '../data/profile'
 
 function ActionLink({ href, label, icon }: { href: string; label: string; icon: React.ReactNode }) {
@@ -24,6 +25,50 @@ function FieldLabel({ htmlFor, children }: { htmlFor: string; children: string }
 }
 
 export function ContactSection() {
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null)
+
+  useEffect(() => {
+    if (!confirmOpen) return
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        setConfirmOpen(false)
+      }
+    }
+
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [confirmOpen])
+
+  useEffect(() => {
+    if (confirmOpen) closeButtonRef.current?.focus()
+  }, [confirmOpen])
+
+  const submitToNetlify = async (form: HTMLFormElement) => {
+    const formData = new FormData(form)
+    // Ensure Netlify receives the form name.
+    if (!formData.get('form-name')) formData.set('form-name', 'contact')
+
+    const body = new URLSearchParams()
+    for (const [key, value] of formData.entries()) {
+      if (typeof value === 'string') body.append(key, value)
+    }
+
+    const res = await fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString(),
+    })
+
+    if (!res.ok) {
+      throw new Error(`Request failed (${res.status})`)
+    }
+  }
+
   return (
     <section id="contact" tabIndex={-1} className="scroll-mt-24 py-14 sm:py-18">
       <div data-reveal className="mx-auto max-w-3xl">
@@ -46,7 +91,29 @@ export function ContactSection() {
             className="pointer-events-none absolute -inset-16 -z-10 opacity-45 blur-2xl bg-gradient-to-br from-cyan-500/14 via-blue-500/10 to-transparent"
           />
 
-          <form name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" className="space-y-5">
+          <form
+            name="contact"
+            method="POST"
+            data-netlify="true"
+            data-netlify-honeypot="bot-field"
+            className="space-y-5"
+            onSubmit={async (e) => {
+              e.preventDefault()
+              const form = e.currentTarget
+              setErrorMessage(null)
+              setStatus('submitting')
+
+              try {
+                await submitToNetlify(form)
+                form.reset()
+                setStatus('success')
+                setConfirmOpen(true)
+              } catch (err) {
+                setStatus('error')
+                setErrorMessage(err instanceof Error ? err.message : 'Failed to send message')
+              }
+            }}
+          >
             <input type="hidden" name="form-name" value="contact" />
             <p className="hidden">
               <label>
@@ -94,14 +161,64 @@ export function ContactSection() {
               </p>
               <button
                 type="submit"
+                disabled={status === 'submitting'}
+                aria-busy={status === 'submitting' ? true : undefined}
                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 active:scale-[0.99] dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400"
               >
                 <Send size={18} aria-hidden="true" />
-                Send Message
+                {status === 'submitting' ? 'Sending…' : 'Send Message'}
               </button>
             </div>
+
+            {status === 'error' ? (
+              <p className="text-sm text-rose-600 dark:text-rose-300">{errorMessage || 'Failed to send message.'}</p>
+            ) : null}
           </form>
         </div>
+
+        {confirmOpen ? (
+          <div
+            className="fixed inset-0 z-50 grid place-items-center px-4"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Message sent confirmation"
+            onMouseDown={(e) => {
+              if (e.target === e.currentTarget) setConfirmOpen(false)
+            }}
+          >
+            <div aria-hidden="true" className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />
+
+            <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-6 shadow-2xl dark:border-white/10 dark:bg-[#0a0a0a]">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-base font-semibold text-slate-900 dark:text-slate-50">Message sent</p>
+                  <p className="mt-1 text-sm text-slate-600 dark:text-white/70">
+                    Thanks! Your message has been received.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  ref={closeButtonRef}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white/80 text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
+                  onClick={() => setConfirmOpen(false)}
+                  aria-label="Close"
+                >
+                  <X size={18} aria-hidden="true" />
+                </button>
+              </div>
+
+              <div className="mt-5 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
+                  onClick={() => setConfirmOpen(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : null}
       </div>
     </section>
   )
