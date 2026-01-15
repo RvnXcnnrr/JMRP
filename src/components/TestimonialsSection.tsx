@@ -318,17 +318,21 @@ export function TestimonialsSection() {
             </h2>
           </div>
 
-          <button
-            type="button"
-            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 disabled:opacity-60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
-            onClick={refreshApproved}
-            disabled={isApprovedRefreshing}
-            aria-busy={isApprovedRefreshing ? true : undefined}
-            aria-label="Refresh testimonials"
-          >
-            <RefreshCw size={18} aria-hidden="true" className={isApprovedRefreshing ? 'animate-spin' : ''} />
-            Refresh
-          </button>
+          {!adminOpen ? (
+            <button
+              type="button"
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 disabled:opacity-60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
+              onClick={refreshApproved}
+              disabled={isApprovedRefreshing}
+              aria-busy={isApprovedRefreshing ? true : undefined}
+              aria-label="Refresh testimonials"
+            >
+              <RefreshCw size={18} aria-hidden="true" className={isApprovedRefreshing ? 'animate-spin' : ''} />
+              Refresh
+            </button>
+          ) : (
+            <div aria-hidden="true" />
+          )}
         </div>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 dark:text-white/70">
           Testimonials are reviewed first and only displayed after approval.
