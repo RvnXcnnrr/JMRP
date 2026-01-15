@@ -36,6 +36,7 @@ export function ProjectsSection() {
   const smarTanomImage = '/assets/projects/smartanom.jpg'
   const smartSimsImage = '/assets/projects/smartsims.jpg'
   const rmtiTrainingUrl = 'https://rmti-training.netlify.app/'
+  const rmtiTrainingImage = '/assets/projects/rmti-training.jpg'
 
   return (
     <section
@@ -150,6 +151,20 @@ export function ProjectsSection() {
 
           <div className="group relative overflow-hidden rounded-3xl border border-slate-200/70 bg-white/70 p-6 shadow-[0_1px_0_rgba(255,255,255,0.65),0_18px_50px_rgba(2,6,23,0.08)] backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-cyan-500/40 hover:shadow-md dark:border-white/10 dark:bg-white/[0.04] dark:shadow-[0_1px_0_rgba(255,255,255,0.04),0_18px_60px_rgba(0,0,0,0.55)] dark:hover:border-cyan-300/30">
             <div aria-hidden="true" className="pointer-events-none absolute -inset-16 -z-10 opacity-35 blur-2xl transition-opacity duration-300 group-hover:opacity-60 bg-gradient-to-br from-cyan-500/12 via-blue-500/10 to-transparent" />
+
+            <div className="relative mb-5 h-28 overflow-hidden rounded-2xl border border-slate-200/70 dark:border-white/10">
+              <img
+                src={rmtiTrainingImage}
+                alt="RMTI Training website preview"
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover"
+                onError={(e) => {
+                  ;(e.currentTarget as HTMLImageElement).style.display = 'none'
+                }}
+              />
+              <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/25 via-transparent to-transparent" />
+            </div>
 
             <h3 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-[#e5e5e5]">RMTI Training Website</h3>
             <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-white/70">

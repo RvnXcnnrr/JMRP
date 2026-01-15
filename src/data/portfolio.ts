@@ -66,6 +66,8 @@ export const projects: Project[] = [
     description:
       'A public-facing website for Remedios Miague Technical Institute Inc. (TESDA private school), deployed on Netlify.',
     stack: ['School Website', 'TESDA', 'Netlify'],
+    imageSrc: '/assets/projects/rmti-training.jpg',
+    imageAlt: 'RMTI Training website preview',
     links: {
       demo: 'https://rmti-training.netlify.app/',
     },
