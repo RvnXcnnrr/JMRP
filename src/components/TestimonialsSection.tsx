@@ -24,6 +24,8 @@ export function TestimonialsSection() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const closeButtonRef = useRef<HTMLButtonElement | null>(null)
 
+  const [isApprovedRefreshing, setIsApprovedRefreshing] = useState(false)
+
   const [adminToken, setAdminToken] = useState<string>(() => localStorage.getItem('testimonials_admin_token') || '')
   const [adminOpen, setAdminOpen] = useState(false)
   const [pending, setPending] = useState<any[]>([])
@@ -70,7 +72,31 @@ export function TestimonialsSection() {
   const showToast = (message: string) => {
     setToastMessage(message)
     if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current)
-    toastTimerRef.current = window.setTimeout(() => setToastMessage(null), 2400)
+    toastTimerRef.current = window.setTimeout(() => setToastMessage(null), 3200)
+  }
+
+  const refreshApproved = async () => {
+    setIsApprovedRefreshing(true)
+
+    try {
+      if (!import.meta.env.PROD) {
+        showToast('Refresh works on the deployed Netlify site.')
+        return
+      }
+
+      const res = await fetch('/.netlify/functions/testimonials-approved', { headers: { Accept: 'application/json' } })
+      const data = await res.json().catch(() => null)
+      if (!res.ok || !data?.ok || !Array.isArray(data.testimonials)) {
+        throw new Error((data && data.error) || `Failed (${res.status})`)
+      }
+
+      setTestimonials(data.testimonials)
+      showToast('Testimonials refreshed')
+    } catch {
+      showToast('Could not refresh testimonials')
+    } finally {
+      setIsApprovedRefreshing(false)
+    }
   }
 
   useEffect(() => {
@@ -139,9 +165,15 @@ export function TestimonialsSection() {
   }
 
   const loadPending = async (tokenOverride?: string) => {
+    setIsRefreshing(true)
+    setAdminStatus('loading')
+    setAdminError(null)
+
     if (!import.meta.env.PROD) {
       setAdminError('Admin approvals are available on the deployed Netlify site.')
       setAdminStatus('error')
+      showToast('Admin approvals are available on the deployed Netlify site.')
+      setIsRefreshing(false)
       return
     }
 
@@ -150,12 +182,10 @@ export function TestimonialsSection() {
       setAdminError('Missing admin token.')
       setAdminStatus('error')
       setAdminAuthorized(false)
+      showToast('Missing admin token')
+      setIsRefreshing(false)
       return
     }
-
-    setAdminStatus('loading')
-    setIsRefreshing(true)
-    setAdminError(null)
 
     try {
       const res = await fetch('/.netlify/functions/testimonials-pending', {
@@ -280,10 +310,26 @@ export function TestimonialsSection() {
       </div>
 
       <div className="relative" data-reveal>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-600 dark:text-cyan-200/80">Testimonials</p>
-        <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 dark:text-[#e5e5e5] sm:text-4xl">
-          What Clients Say
-        </h2>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-600 dark:text-cyan-200/80">Testimonials</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 dark:text-[#e5e5e5] sm:text-4xl">
+              What Clients Say
+            </h2>
+          </div>
+
+          <button
+            type="button"
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 disabled:opacity-60 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
+            onClick={refreshApproved}
+            disabled={isApprovedRefreshing}
+            aria-busy={isApprovedRefreshing ? true : undefined}
+            aria-label="Refresh testimonials"
+          >
+            <RefreshCw size={18} aria-hidden="true" className={isApprovedRefreshing ? 'animate-spin' : ''} />
+            Refresh
+          </button>
+        </div>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 dark:text-white/70">
           Testimonials are reviewed first and only displayed after approval.
         </p>
@@ -766,8 +812,12 @@ export function TestimonialsSection() {
         ) : null}
 
         {toastMessage ? (
-          <div className="fixed bottom-5 right-5 z-50">
-            <div className="rounded-2xl border border-slate-200/70 bg-white/90 px-4 py-3 text-sm font-semibold text-slate-900 shadow-lg backdrop-blur dark:border-white/10 dark:bg-white/[0.08] dark:text-white">
+          <div className="fixed bottom-5 right-5 z-[60]">
+            <div
+              role="status"
+              aria-live="polite"
+              className="rounded-2xl border border-slate-200/70 bg-white/95 px-4 py-3 text-sm font-semibold text-slate-900 shadow-lg backdrop-blur dark:border-white/10 dark:bg-white/[0.12] dark:text-white"
+            >
               {toastMessage}
             </div>
           </div>
