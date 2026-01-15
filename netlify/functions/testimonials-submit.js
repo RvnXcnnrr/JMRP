@@ -15,7 +15,53 @@ function badRequest(message) {
 }
 
 function getClientIP(req) {
-  return req.headers.get('x-nf-client-connection-ip') || req.headers.get('x-forwarded-for') || ''
+  const nf = req.headers.get('x-nf-client-connection-ip')
+  if (nf) return nf
+
+  const forwarded = req.headers.get('x-forwarded-for') || ''
+  // x-forwarded-for may contain a list. Take the first value.
+  const first = forwarded.split(',')[0]?.trim()
+  return first || ''
+}
+
+function clamp(s, maxLen) {
+  const text = String(s || '').trim()
+  if (!text) return ''
+  return text.length > maxLen ? text.slice(0, maxLen) : text
+}
+
+function isValidEmail(email) {
+  // Simple sanity check. We don't need full RFC parsing.
+  const e = String(email || '').trim()
+  if (!e) return true
+  if (e.length > 120) return false
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)
+}
+
+async function enforceRateLimit(store, ip) {
+  if (!ip) return
+
+  const key = `ratelimit/${ip}`
+  const now = Date.now()
+  const windowMs = 60 * 60 * 1000
+  const maxPerWindow = 5
+
+  const cur = (await store.get(key, { type: 'json' })) || null
+  const state = cur && typeof cur === 'object' ? cur : { count: 0, resetAt: now + windowMs }
+
+  const resetAt = typeof state.resetAt === 'number' ? state.resetAt : now + windowMs
+  if (now > resetAt) {
+    state.count = 0
+    state.resetAt = now + windowMs
+  }
+
+  const count = typeof state.count === 'number' ? state.count : 0
+  if (count >= maxPerWindow) {
+    throw new Error('Too many submissions. Please try again later.')
+  }
+
+  state.count = count + 1
+  await store.setJSON(key, state)
 }
 
 async function parseBody(req) {
@@ -55,27 +101,35 @@ export default async (req, context) => {
   // Honeypot support
   if (String(body['bot-field'] || '').trim()) return json(200, { ok: true })
 
-  const name = String(body.name || '').trim()
-  const message = String(body.message || '').trim()
+  const name = clamp(body.name, 80)
+  const email = clamp(body.email, 120)
+  const role = clamp(body.role, 80)
+  const company = clamp(body.company, 80)
+  const project = clamp(body.project, 80)
+  const message = clamp(body.message, 1200)
 
   if (!name) return badRequest('Name is required')
   if (!message) return badRequest('Testimonial is required')
-  if (message.length > 1200) return badRequest('Testimonial is too long')
+  if (!isValidEmail(email)) return badRequest('Invalid email')
 
   const entry = {
     id: crypto.randomUUID(),
     name,
-    email: body.email ? String(body.email).trim() : undefined,
-    role: body.role ? String(body.role).trim() : undefined,
-    company: body.company ? String(body.company).trim() : undefined,
-    project: body.project ? String(body.project).trim() : undefined,
+    email: email || undefined,
+    role: role || undefined,
+    company: company || undefined,
+    project: project || undefined,
     message,
     createdAt: new Date().toISOString(),
-    ip: getClientIP(req),
-    userAgent: req.headers.get('user-agent') || undefined,
   }
 
   const store = getStore({ name: 'testimonials', consistency: 'strong' })
+
+  try {
+    await enforceRateLimit(store, getClientIP(req))
+  } catch (err) {
+    return badRequest(err instanceof Error ? err.message : 'Rate limited')
+  }
 
   const pending = (await store.get('pending', { type: 'json' })) || []
   if (!Array.isArray(pending)) return json(500, { ok: false, error: 'Storage corrupted (pending)' })

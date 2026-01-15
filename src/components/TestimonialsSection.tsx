@@ -162,6 +162,8 @@ export function TestimonialsSection() {
     setAdminStatus('loading')
     setAdminError(null)
 
+    let failed = false
+
     try {
       const res = await fetch('/.netlify/functions/testimonials-moderate', {
         method: 'POST',
@@ -186,10 +188,11 @@ export function TestimonialsSection() {
         // ignore
       }
     } catch (err) {
+      failed = true
       setAdminStatus('error')
       setAdminError(err instanceof Error ? err.message : 'Failed to update testimonial')
     } finally {
-      if (adminStatus !== 'error') setAdminStatus('idle')
+      if (!failed) setAdminStatus('idle')
     }
   }
 
@@ -199,6 +202,8 @@ export function TestimonialsSection() {
 
     setAdminStatus('loading')
     setAdminError(null)
+
+    let failed = false
 
     try {
       const res = await fetch('/.netlify/functions/testimonials-delete-approved', {
@@ -223,10 +228,11 @@ export function TestimonialsSection() {
         // ignore
       }
     } catch (err) {
+      failed = true
       setAdminStatus('error')
       setAdminError(err instanceof Error ? err.message : 'Failed to delete testimonial')
     } finally {
-      if (adminStatus !== 'error') setAdminStatus('idle')
+      if (!failed) setAdminStatus('idle')
     }
   }
 
