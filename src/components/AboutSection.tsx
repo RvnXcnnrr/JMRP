@@ -50,7 +50,7 @@ export function AboutSection() {
               <span aria-hidden="true" className="inline-flex items-center gap-2">
                 <span className="grid h-5 w-5 place-items-center">🟢</span>
               </span>
-              Open for OJT / Internship January 2026
+              Open for OJT / Internship (Jan 2026) • Open for Web & Mobile commissions
             </div>
           </div>
 

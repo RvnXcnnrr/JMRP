@@ -83,6 +83,7 @@ npm run preview
 
 - Profile details and social links: `src/data/profile.ts`
 - Skills, projects, and experience: `src/data/portfolio.ts`
+- Approved testimonials (displayed on site): `src/data/testimonials.ts`
 
 ## Site structure (sections)
 
@@ -90,6 +91,7 @@ npm run preview
 - **About**: short professional summary (kept intentionally concise).
 - **Skills**: grouped chips (IoT / Backend / SysAdmin / Tools / Minimal Frontend).
 - **Projects**: cards with stack tags and links.
+- **Testimonials**: approved testimonials + a Netlify-backed submission form (requires approval).
 - **Certifications**: cards that support image-based certificates.
 - **Experience**: technician experience + current “seeking OJT/internship” status.
 - **Contact**: form opens a prefilled email (`mailto:`) + social links.

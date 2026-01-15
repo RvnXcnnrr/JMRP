@@ -62,7 +62,7 @@ export function Hero() {
               data-reveal
             >
               I bridge the gap between connected devices and stable infrastructure. Focused on maintainability, accessibility,
-              and professional delivery.
+              and professional delivery. Also open for website and mobile app development commissions.
             </p>
 
             <div className="hero-intro mt-8 flex flex-wrap gap-3" style={{ transitionDelay: '380ms' }} data-reveal>

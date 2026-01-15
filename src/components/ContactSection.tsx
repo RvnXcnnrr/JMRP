@@ -74,10 +74,10 @@ export function ContactSection() {
       <div data-reveal className="w-full">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-600 dark:text-cyan-200/80">Contact</p>
         <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 dark:text-[#e5e5e5] sm:text-4xl">
-          Ready to contribute to your team?
+          Ready to contribute—or build something new?
         </h2>
         <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-white/70">
-          Email is best for OJT/internship inquiries. LinkedIn works great for quick updates.
+          Email is best for OJT/internship and commission inquiries. LinkedIn works great for quick updates.
         </p>
 
         <div className="mt-7 flex flex-col gap-3 sm:flex-row">

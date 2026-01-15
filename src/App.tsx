@@ -6,6 +6,7 @@ import { ExperienceSection } from './components/ExperienceSection'
 import { Hero } from './components/Hero'
 import { ProjectsSection } from './components/ProjectsSection'
 import { SkillsSection } from './components/SkillsSection'
+import { TestimonialsSection } from './components/TestimonialsSection'
 import { ContactSection } from './components/ContactSection'
 import { Navbar } from './components/Navbar'
 import { profile } from './data/profile'
@@ -22,6 +23,7 @@ function App() {
       { href: '#about', label: 'About' },
       { href: '#skills', label: 'Skills' },
       { href: '#projects', label: 'Projects' },
+      { href: '#testimonials', label: 'Testimonials' },
       { href: '#certifications', label: 'Certifications' },
       { href: '#experience', label: 'Experience' },
       { href: '#contact', label: 'Contact' },
@@ -50,6 +52,7 @@ function App() {
         <SkillsSection />
 
         <ProjectsSection />
+        <TestimonialsSection />
         <CredentialsSection />
 
         <ExperienceSection />

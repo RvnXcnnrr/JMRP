@@ -11,7 +11,7 @@ export function Footer({ quickLinks, socialLinks }: FooterProps) {
           <div>
             <p className="text-sm font-semibold text-slate-900 dark:text-slate-50">Portfolio</p>
             <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-              Built for internships, job applications, and freelance work.
+              Built for internships, job applications, and development commissions.
             </p>
           </div>
 
