@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Check, Send, Trash2, X } from 'lucide-react'
+import { Check, RefreshCw, Send, Trash2, X } from 'lucide-react'
 import { approvedTestimonials } from '../data/testimonials'
 
 function FieldLabel({ htmlFor, children }: { htmlFor: string; children: string }) {
@@ -30,6 +30,10 @@ export function TestimonialsSection() {
   const [adminStatus, setAdminStatus] = useState<'idle' | 'loading' | 'error'>('idle')
   const [adminError, setAdminError] = useState<string | null>(null)
   const [adminAuthorized, setAdminAuthorized] = useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false)
+
+  const [toastMessage, setToastMessage] = useState<string | null>(null)
+  const toastTimerRef = useRef<number | null>(null)
 
   const [tokenModalOpen, setTokenModalOpen] = useState(false)
   const [tokenDraft, setTokenDraft] = useState('')
@@ -56,6 +60,18 @@ export function TestimonialsSection() {
 
     void load()
   }, [])
+
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current)
+    }
+  }, [])
+
+  const showToast = (message: string) => {
+    setToastMessage(message)
+    if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current)
+    toastTimerRef.current = window.setTimeout(() => setToastMessage(null), 2400)
+  }
 
   useEffect(() => {
     if (!confirmOpen) return
@@ -138,6 +154,7 @@ export function TestimonialsSection() {
     }
 
     setAdminStatus('loading')
+    setIsRefreshing(true)
     setAdminError(null)
 
     try {
@@ -159,6 +176,8 @@ export function TestimonialsSection() {
       const unauthorized = /unauthorized/i.test(message) || /\(401\)/.test(message) || / 401\b/.test(message)
       setAdminError(unauthorized ? 'Not authorized' : message)
       setAdminAuthorized(false)
+    } finally {
+      setIsRefreshing(false)
     }
   }
 
@@ -352,8 +371,12 @@ export function TestimonialsSection() {
                     className="rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/40 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10"
                     onClick={() => loadPending()}
                     disabled={adminStatus === 'loading'}
+                    aria-busy={isRefreshing ? true : undefined}
                   >
-                    Refresh
+                    <span className="inline-flex items-center gap-2">
+                      <RefreshCw size={18} aria-hidden="true" className={isRefreshing ? 'animate-spin' : ''} />
+                      Refresh
+                    </span>
                   </button>
                   <button
                     type="button"
@@ -370,6 +393,10 @@ export function TestimonialsSection() {
                       localStorage.removeItem('testimonials_admin_token')
                       setAdminToken('')
                       setPending([])
+                      setAdminAuthorized(false)
+                      setAdminError(null)
+                      setAdminStatus('idle')
+                      showToast('Admin token cleared')
                     }}
                   >
                     Clear Token
@@ -734,6 +761,14 @@ export function TestimonialsSection() {
                   Save &amp; Load Pending
                 </button>
               </div>
+            </div>
+          </div>
+        ) : null}
+
+        {toastMessage ? (
+          <div className="fixed bottom-5 right-5 z-50">
+            <div className="rounded-2xl border border-slate-200/70 bg-white/90 px-4 py-3 text-sm font-semibold text-slate-900 shadow-lg backdrop-blur dark:border-white/10 dark:bg-white/[0.08] dark:text-white">
+              {toastMessage}
             </div>
           </div>
         ) : null}
